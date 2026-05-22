@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Cards</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 24px; background: var(--paper-2); font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow-s); }
+  .card .row { display: flex; gap: 12px; align-items: center; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--lilac-100); display: grid; place-items: center; font-weight: 700; color: var(--lilac-700); }
+  .stack { display: flex; flex-direction: column; gap: 2px; }
+  .name { font-weight: 600; color: var(--ink); }
+  .meta { font-size: 12px; color: var(--fg-subtle); }
+  .price { font-family: var(--font-mono); font-weight: 500; }
+  .img { width: 100%; aspect-ratio: 3 / 4; background-size: cover; background-position: center; border-radius: 12px; }
+  .tag { display: inline-block; font-size: 11px; padding: 4px 10px; border-radius: 999px; background: var(--lilac-100); color: var(--lilac-700); font-weight: 600; letter-spacing: 0.02em; }
+  .stars { color: var(--coral-500); font-size: 14px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row">
+      <div class="avatar">SL</div>
+      <div class="stack">
+        <span class="name">Sophia Laurent</span>
+        <span class="meta">Wedding · Occasionwear</span>
+      </div>
+    </div>
+    <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+      <span class="tag">Wedding Stylist</span>
+      <span class="meta"><span class="stars">★★★★★</span> 4.9</span>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <div class="img" style="background-image: url('../assets/photos/model-blazer-coffee.png'); background-color: var(--paper-3); aspect-ratio: 16/9;"></div>
+    <div style="padding: 14px 16px;">
+      <div class="name">Mandy — Cottage Core Stylist</div>
+      <div class="meta" style="margin-top: 4px;">Brooklyn · $30/hr</div>
+    </div>
+  </div>
+</body>
+</html>

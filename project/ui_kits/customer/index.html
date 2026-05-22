@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Customer Mobile</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #ECE7E0; min-height: 100vh; font-family: 'Outfit', system-ui, sans-serif; color: #1A1410; }
+  .canvas { padding: 32px 24px 80px; }
+  .header { max-width: 1200px; margin: 0 auto 24px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .title { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 32px; letter-spacing: -0.005em; color: #1A1410; line-height: 1; }
+  .subtitle { font-size: 13px; color: #8C8278; max-width: 560px; line-height: 1.5; }
+  .eyebrow { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #8C8278; font-weight: 600; }
+  .grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 36px 28px; justify-items: center; align-items: start; }
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .phone-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8C8278; font-weight: 600; }
+  .controls { max-width: 1200px; margin: 0 auto 28px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid #DCD5CB; color: #1A1410; font-family: 'Outfit', sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+  .pill.active { background: #1A1410; color: #fff; border-color: #1A1410; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+// Mode A: tour — show all 10 screens side-by-side
+// Mode B: prototype — single phone, navigable
+
+const SCREENS = [
+  { id: 'sign-in',        label: 'Sign in', Comp: SignInScreen, showNav: false },
+  { id: 'sign-up',        label: 'Sign up', Comp: SignUpScreen, showNav: false },
+  { id: 'role',           label: 'Role select', Comp: RoleSelectScreen, showNav: false },
+  { id: 'quiz',           label: 'Style quiz', Comp: QuizScreen, showNav: false },
+  { id: 'profile-setup',  label: 'Profile setup', Comp: ProfileSetupScreen, showNav: false },
+  { id: 'profile-detail', label: 'Profile detail', Comp: ProfileDetailScreen, showNav: false },
+  { id: 'home',           label: 'Home', Comp: HomeScreen, showNav: true, active: 'home' },
+  { id: 'filter',         label: 'Filter match', Comp: FilterScreen, showNav: false },
+  { id: 'messages-list',  label: 'Messages list', Comp: MessagesListScreen, showNav: true, active: 'message' },
+  { id: 'stylist',        label: 'Stylist', Comp: StylistScreen, showNav: false },
+  { id: 'chat',           label: 'Chat', Comp: ChatScreen, showNav: false },
+  { id: 'complete',       label: 'Complete', Comp: CompleteScreen, showNav: false },
+  { id: 'review',         label: 'Review', Comp: ReviewScreen, showNav: false },
+  { id: 'thank-you',      label: 'Thank you', Comp: ThankYouScreen, showNav: false },
+  { id: 'account',        label: 'Account', Comp: AccountScreen, showNav: false, active: 'user' },
+  { id: 'ipa-quiz',       label: 'IPA quiz', Comp: IPAQuizScreen, showNav: false },
+  { id: 'loyalty',        label: 'Collective', Comp: LoyaltyScreen, showNav: false, active: 'user' },
+  { id: 'tier-compare',   label: 'Tiers', Comp: TierCompareScreen, showNav: false },
+  { id: 'invite',         label: 'Invite friend', Comp: InviteFriendScreen, showNav: false },
+  { id: 'points-history', label: 'Points history', Comp: PointsHistoryScreen, showNav: false },
+];
+
+function Phone({ screenId, state, set, mode = 'tour' }) {
+  const s = SCREENS.find(x => x.id === screenId) || SCREENS[0];
+  const Comp = s.Comp;
+  const go = (next) => {
+    if (mode === 'tour') return;
+    set({ screen: next });
+  };
+  return (
+    <IOSDevice width={390} height={780}>
+      <div style={{ position: 'relative', minHeight: '100%' }}>
+        <div style={{ paddingTop: 56 }}>
+          <Comp go={go} state={state} set={(p) => set({ ...state, ...p })}/>
+        </div>
+        {s.showNav && <BottomNav active={s.active || 'home'} onChange={(k) => go(k === 'user' ? 'account' : k === 'message' ? 'messages-list' : k === 'calendar' ? 'home' : 'home')}/>}
+      </div>
+    </IOSDevice>
+  );
+}
+
+function App() {
+  const [mode, setMode] = useState('tour');
+  const [state, setState] = useState({
+    role: 'client',
+    styleTags: ['boho', 'Chic'],
+    colors: ['#E94560', '#D9A78E'],
+    need: 'event',
+    ratings: { overall: 5, style: 5, comm: 5, value: 4, time: 5, ease: 5 },
+    screen: 'sign-in',
+  });
+
+  return (
+    <div className="canvas">
+      <div className="header">
+        <div>
+          <div className="eyebrow">UI Kit · Customer mobile</div>
+          <h1 className="title" style={{marginTop: 4}}>Sourced for Clients</h1>
+          <p className="subtitle" style={{marginTop: 6}}>
+            iOS-style mobile flow recreating the wireframes from the source deck — sign-in, role-select, style quiz, stylist matching, chat, post-session review, account, and the SOURCED Collective loyalty page.
+          </p>
+        </div>
+        <div className="controls">
+          <button className={'pill ' + (mode === 'tour' ? 'active' : '')} onClick={() => setMode('tour')}>All screens</button>
+          <button className={'pill ' + (mode === 'flow' ? 'active' : '')} onClick={() => { setMode('flow'); setState(s => ({...s, screen: 'sign-in'})); }}>Click-thru prototype</button>
+        </div>
+      </div>
+
+      {mode === 'tour' ? (
+        <div className="grid">
+          {SCREENS.map(s => (
+            <div key={s.id} className="phone-wrap">
+              <Phone screenId={s.id} state={state} set={setState} mode="tour"/>
+              <div className="phone-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid" style={{ gridTemplateColumns: '1fr' }}>
+          <div className="phone-wrap">
+            <Phone screenId={state.screen} state={state} set={setState} mode="flow"/>
+            <div className="phone-label">{SCREENS.find(s => s.id === state.screen)?.label || 'Sign in'} — interactive</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+</body>
+</html>

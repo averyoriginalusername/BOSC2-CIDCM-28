@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" fill="none">
+  <g transform="translate(6 22) rotate(-6 30 30)" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M30 23 C30 18 30 15 30 14 C30 10 32.5 7.5 36 7.5 C39.3 7.5 41.6 9.8 41.4 13"></path>
+    <path d="M30 23 C24 28 16 34 9 40 C22 37 38 37 51 40 C44 34 36 28 30 23 Z"></path>
+  </g>
+  <text x="72" y="62" font-family="&#39;Instrument Serif&#39;, &#39;Times New Roman&#39;, serif" font-style="italic" font-weight="400" font-size="58" letter-spacing="-0.5" fill="currentColor">Sourced</text>
+</svg>

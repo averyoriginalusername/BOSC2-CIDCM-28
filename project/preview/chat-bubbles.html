@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Chat Bubbles</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 24px 28px; background: var(--paper-2); font-family: var(--font-sans); }
+  .thread { display: flex; flex-direction: column; gap: 10px; max-width: 480px; margin: 0 auto; }
+  .b { font-size: 13.5px; line-height: 1.45; padding: 12px 16px; border-radius: 20px; max-width: 78%; }
+  .out { align-self: flex-end; background: var(--lilac-500); color: white; border-bottom-right-radius: 6px; }
+  .in { align-self: flex-start; background: var(--lilac-100); color: var(--lilac-700); border-bottom-left-radius: 6px; }
+  .role { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); margin: 4px 4px 0 4px; }
+  .role.r { text-align: right; }
+</style>
+</head>
+<body>
+  <div class="thread">
+    <div class="role r">Olivia · sent</div>
+    <div class="b out">Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!</div>
+    <div class="role">Sophia · stylist</div>
+    <div class="b in">HI! Yes that sounds great as I am currently available. What look are you going for?</div>
+    <div class="role r">Olivia · sent</div>
+    <div class="b out">Perfect! I was hoping for a princess look with a long train and preferably white.</div>
+    <div class="role">Sophia · stylist</div>
+    <div class="b in">I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?</div>
+  </div>
+</body>
+</html>

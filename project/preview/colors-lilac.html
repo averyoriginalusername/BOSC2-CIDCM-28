@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Lilac Palette</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 24px; background: var(--paper-2); }
+  .row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .sw { aspect-ratio: 1 / 1.1; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; font-family: var(--font-sans); }
+  .sw .n { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+  .sw .v { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; margin-top: 2px; }
+  .header { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: 14px; }
+  .note { font-size: 12px; color: var(--fg-subtle); margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="header">Lilac — stylist-side primary</div>
+  <div class="row">
+    <div class="sw" style="background: var(--lilac-50); color: var(--lilac-700);"><div class="n">50</div><div class="v">#F4F1FF</div></div>
+    <div class="sw" style="background: var(--lilac-100); color: var(--lilac-700);"><div class="n">100</div><div class="v">#E6DFFF</div></div>
+    <div class="sw" style="background: var(--lilac-200); color: var(--lilac-700);"><div class="n">200</div><div class="v">#CDC0FF</div></div>
+    <div class="sw" style="background: var(--lilac-300); color: white;"><div class="n">300</div><div class="v">#A698F0</div></div>
+    <div class="sw" style="background: var(--lilac-400); color: white;"><div class="n">400</div><div class="v">#8B7AE0</div></div>
+    <div class="sw" style="background: var(--lilac-500); color: white; outline: 2px solid var(--ink); outline-offset: -2px;"><div class="n">500 · base</div><div class="v">#6B5BD3</div></div>
+    <div class="sw" style="background: var(--lilac-600); color: white;"><div class="n">600</div><div class="v">#5544B8</div></div>
+    <div class="sw" style="background: var(--lilac-700); color: white;"><div class="n">700</div><div class="v">#3F3294</div></div>
+  </div>
+  <div class="note">Used on stylist messages (chat bubbles), Stylist Information chrome, loyalty tier accents, stylist desktop active tab indicator.</div>
+</body>
+</html>

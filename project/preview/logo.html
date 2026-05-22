@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Logo</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 28px; background: var(--paper-2); display: grid; grid-template-columns: 1.1fr 1fr; gap: 26px; align-items: center; }
+  .panel { display: flex; flex-direction: column; gap: 16px; }
+  .lockup { display: flex; align-items: center; gap: 12px; }
+  .mark { width: 34px; height: 34px; color: var(--ink); flex-shrink: 0; transform: rotate(-6deg) translateY(2px); }
+  .wmark { font-family: var(--font-display); font-weight: 400; font-size: 46px; letter-spacing: -0.005em; color: var(--ink); line-height: 0.95; font-style: italic; }
+  .caps { font-family: var(--font-sans); font-weight: 300; font-size: 14px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--ink); padding-left: 0.5em; }
+  .inverse { background: var(--ink); color: var(--paper); padding: 24px 26px; border-radius: var(--radius-m); display: flex; flex-direction: column; gap: 16px; }
+  .inverse .mark { color: var(--paper); }
+  .inverse .wmark { color: var(--paper); }
+  .inverse .caps { color: var(--paper); }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); margin-top: 4px; }
+  .inverse .label { color: rgba(255,255,255,0.55); }
+  .divider { height: 1px; background: var(--line); margin: 4px 0; }
+  .inverse .divider { background: rgba(255,255,255,0.12); }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <div class="row">
+      <svg class="mark" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Hook: gentle curve, elongated -->
+        <path d="M32 27 C32 22 32 19 32 18 C32 14 34.5 11.5 38 11.5 C41.3 11.5 43.6 13.8 43.4 17"/>
+        <!-- Hanger body: two soft concave sweeps + subtly bowed bottom -->
+        <path d="M32 27 C26 32 18 38 11 44 C24 41 40 41 53 44 C46 38 38 32 32 27 Z"/>
+      </svg>
+      <span class="wmark">Sourced</span>
+    </div>
+    <div class="label">Primary · hand-drawn hanger · 1.4 stroke · slight tilt to echo italic</div>
+    <div class="divider"></div>
+    <span class="caps">SOURCED</span>
+    <div class="label">Editorial caps · Outfit 300 · 0.5em tracking — for footers, eyebrows, app icons</div>
+  </div>
+
+  <div class="inverse">
+    <div class="row">
+      <svg class="mark" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32 27 C32 22 32 19 32 18 C32 14 34.5 11.5 38 11.5 C41.3 11.5 43.6 13.8 43.4 17"/>
+        <path d="M32 27 C26 32 18 38 11 44 C24 41 40 41 53 44 C46 38 38 32 32 27 Z"/>
+      </svg>
+      <span class="wmark">Sourced</span>
+    </div>
+    <div class="label">Reversed — dark surfaces</div>
+  </div>
+</body>
+</html>

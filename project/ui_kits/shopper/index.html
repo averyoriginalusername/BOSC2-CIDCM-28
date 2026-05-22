@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Stylist Desktop</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #ECE7E0; min-height: 100vh; font-family: 'Outfit', system-ui, sans-serif; color: #1A1410; }
+  .canvas { padding: 32px 24px 60px; max-width: 1480px; margin: 0 auto; }
+  .header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 16px; }
+  .title { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 32px; letter-spacing: -0.005em; color: #1A1410; line-height: 1; margin: 0; }
+  .subtitle { font-size: 13px; color: #8C8278; max-width: 560px; line-height: 1.5; margin-top: 6px; }
+  .eyebrow { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #8C8278; font-weight: 600; }
+  .frame { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 36px rgba(26,20,16,0.08), 0 4px 8px rgba(26,20,16,0.04); }
+  .chrome { background: #F2EEE6; padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #DCD5CB; }
+  .lights { display: flex; gap: 7px; }
+  .light { width: 12px; height: 12px; border-radius: 50%; }
+  .url { flex: 1; background: #fff; border-radius: 999px; padding: 5px 14px; font-size: 12px; color: #4A413B; border: 1px solid #DCD5CB; font-family: 'JetBrains Mono', monospace; }
+  .url::before { content: '🔒'; margin-right: 6px; opacity: 0.5; }
+  .app-shell { display: grid; grid-template-rows: auto 1fr; }
+  .topbar { background: #fff; border-bottom: 1px solid #ECE7E0; padding: 0 26px; display: flex; align-items: center; gap: 8px; }
+  .topbar-left { display: flex; align-items: center; gap: 10px; padding: 14px 18px 14px 0; border-right: 1px solid #ECE7E0; margin-right: 10px; }
+  .tab { padding: 18px 14px; border: 0; background: transparent; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: #8C8278; position: relative; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .tab.active { color: #1A1410; font-weight: 600; }
+  .tab.active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: #1A1410; }
+  .top-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .content { background: #FAF7F2; min-height: 760px; max-height: 860px; overflow: auto; position: relative; }
+  .pill { padding: 7px 13px; border-radius: 999px; background: #fff; border: 1px solid #DCD5CB; color: #1A1410; font-family: 'Outfit', sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+  .pill.active { background: #1A1410; color: #fff; border-color: #1A1410; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+const TABS = [
+  { k: 'creation', label: 'Creation',     icon: 'penTool',  url: 'creationpage' },
+  { k: 'payments', label: 'Payments',     icon: 'wallet',   url: 'payments' },
+  { k: 'calendar', label: 'Calendar',     icon: 'calendar', url: 'calendar' },
+  { k: 'clients',  label: 'Clients',      icon: 'users',    url: 'clientcontact' },
+  { k: 'messages', label: 'Messages',     icon: 'message',  url: 'messages' },
+  { k: 'profile',  label: 'Profile',      icon: 'edit',     url: 'profile' },
+  { k: 'account',  label: 'Account',      icon: 'user',     url: 'account' },
+];
+
+const FLOW_SCREENS = ['login', 'signup', 'workspace'];
+
+function App() {
+  const [flow, setFlow] = useState('workspace'); // login | signup | workspace
+  const [tab, setTab] = useState('creation');
+
+  const SCREENS = {
+    creation: CreationScreen,
+    payments: PaymentsScreen,
+    calendar: CalendarScreen,
+    clients:  ClientsScreen,
+    messages: MessagesScreen,
+    profile:  ProfileScreen,
+    account:  AccountScreen,
+  };
+  const Screen = SCREENS[tab];
+  const url =
+    flow === 'login'  ? 'www.sourced.com/login' :
+    flow === 'signup' ? 'www.sourced.com/signup' :
+    `www.sourced.com/stylistpage/${TABS.find(t => t.k === tab).url}`;
+
+  const tourMode = flow === 'all';
+
+  return (
+    <div className="canvas">
+      <div className="header">
+        <div>
+          <div className="eyebrow">UI Kit · Stylist desktop</div>
+          <h1 className="title">Sourced for Stylists</h1>
+          <p className="subtitle">A workspace for the supply side — login &amp; signup, dashboard, payments, calendar, clients, messages, profile, and account.</p>
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[
+            { k: 'login',     label: 'Login' },
+            { k: 'signup',    label: 'Signup' },
+            { k: 'workspace', label: 'Workspace' },
+          ].map(p => (
+            <button key={p.k} className={'pill ' + (flow === p.k ? 'active' : '')} onClick={() => setFlow(p.k)}>{p.label}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="frame">
+        <div className="chrome">
+          <div className="lights">
+            <div className="light" style={{ background: '#FF5F57' }}/>
+            <div className="light" style={{ background: '#FEBC2E' }}/>
+            <div className="light" style={{ background: '#28C840' }}/>
+          </div>
+          <div style={{ display: 'flex', gap: 6, marginLeft: 8 }}>
+            <Icon name="chevronLeft" size={16} stroke="#8C8278"/>
+            <Icon name="chevronRight" size={16} stroke="#C7BFB5"/>
+          </div>
+          <div className="url">{url}</div>
+          <Icon name="download" size={16} stroke="#8C8278"/>
+        </div>
+
+        {flow === 'login' && (
+          <div className="content">
+            <LoginScreen go={(next) => setFlow(next === 'workspace' ? 'workspace' : next)}/>
+          </div>
+        )}
+        {flow === 'signup' && (
+          <div className="content">
+            <SignupScreen go={(next) => setFlow(next === 'workspace' ? 'workspace' : next)}/>
+          </div>
+        )}
+        {flow === 'workspace' && (
+          <div className="app-shell">
+            <div className="topbar">
+              <div className="topbar-left">
+                <Logo size={26}/>
+                <Wordmark size={22}/>
+              </div>
+              {TABS.map(t => (
+                <button key={t.k} className={'tab ' + (tab === t.k ? 'active' : '')} onClick={() => setTab(t.k)}>
+                  <Icon name={t.icon} size={15} stroke={tab === t.k ? '#1A1410' : '#8C8278'} strokeWidth={1.8}/>
+                  {t.label}
+                </button>
+              ))}
+              <div className="top-right">
+                <button style={{ background: 'transparent', border: 0, cursor: 'pointer', position: 'relative' }}>
+                  <Icon name="bell" size={18} stroke="#1A1410" strokeWidth={1.6}/>
+                  <span style={{ position: 'absolute', top: -2, right: -2, width: 8, height: 8, borderRadius: '50%', background: '#EE5A5A' }}/>
+                </button>
+                <Icon name="menu" size={18} stroke="#1A1410"/>
+                <Avatar src="../../assets/photos/model-blazer-coffee.png" size={32}/>
+              </div>
+            </div>
+
+            <div className="content">
+              <Screen/>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Inputs</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 28px; background: var(--paper-2); font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 13px; font-weight: 600; color: var(--coral-500); }
+  .label-ink { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .input { font-family: var(--font-sans); font-size: 15px; padding: 12px 14px; border: 1.25px solid var(--line-2); border-radius: 12px; background: white; color: var(--ink); outline: none; }
+  .input::placeholder { color: var(--ink-4); }
+  .input:focus { border-color: var(--coral-500); }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .check { width: 16px; height: 16px; border-radius: 4px; background: var(--coral-500); display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 11px; }
+  .hint { font-size: 12px; color: var(--fg-subtle); }
+</style>
+</head>
+<body>
+  <div class="field">
+    <span class="label">Email</span>
+    <input class="input" placeholder="example@email.com" value="olivia@email.com">
+  </div>
+  <div class="field">
+    <span class="label">Password</span>
+    <input class="input" type="password" value="••••••••••">
+  </div>
+  <div class="field">
+    <span class="label-ink">Name</span>
+    <input class="input" placeholder="Your full name">
+    <span class="hint">As it should appear to stylists.</span>
+  </div>
+  <div class="field">
+    <span class="label-ink">Phone number</span>
+    <input class="input" placeholder="+1 (555) 000-0000">
+  </div>
+  <div class="row" style="grid-column: 1 / -1; margin-top: 4px;">
+    <span class="check">✓</span>
+    <span style="font-size: 13px; color: var(--ink-2);">I agree to the <span style="color: var(--coral-500); font-weight: 600;">Terms of Services</span> and <span style="color: var(--coral-500); font-weight: 600;">Privacy Policy.</span></span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 28px; background: var(--paper-2); font-family: var(--font-sans); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 22px; align-items: center; }
+  .stack { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .lab { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); }
+  .btn { font-family: var(--font-sans); font-weight: 600; font-size: 15px; border: 0; padding: 14px 28px; border-radius: 999px; cursor: pointer; }
+  .btn-primary { background: var(--coral-500); color: white; }
+  .btn-stylist { background: var(--lilac-500); color: white; }
+  .btn-ink { background: var(--ink); color: white; padding: 12px 24px; }
+  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); padding: 12.5px 26px; }
+  .btn-ghost { background: transparent; color: var(--ink); padding: 12px 18px; }
+  .btn-disabled { background: var(--paper-4); color: var(--ink-3); cursor: not-allowed; }
+  .btn-sm { font-size: 13px; padding: 9px 18px; }
+  .btn-lg { font-size: 17px; padding: 18px 36px; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="stack"><span class="lab">primary · coral</span><button class="btn btn-primary">Sign in</button></div>
+    <div class="stack"><span class="lab">primary · stylist</span><button class="btn btn-stylist">Message</button></div>
+    <div class="stack"><span class="lab">primary · ink</span><button class="btn btn-ink">GET STARTED</button></div>
+    <div class="stack"><span class="lab">outline</span><button class="btn btn-outline">LOG IN</button></div>
+    <div class="stack"><span class="lab">ghost</span><button class="btn btn-ghost">Forgot password?</button></div>
+    <div class="stack"><span class="lab">disabled</span><button class="btn btn-disabled">Continue</button></div>
+    <div class="stack"><span class="lab">small</span><button class="btn btn-primary btn-sm">Take a quiz</button></div>
+    <div class="stack"><span class="lab">large</span><button class="btn btn-primary btn-lg">Continue</button></div>
+    <div class="stack"><span class="lab">block · 100%</span><button class="btn btn-primary" style="width: 100%;">Submit Review</button></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Coral Palette</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 24px; background: var(--paper-2); }
+  .row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .sw { aspect-ratio: 1 / 1.1; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; font-family: var(--font-sans); }
+  .sw .n { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+  .sw .v { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; margin-top: 2px; }
+  .header { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: 14px; }
+  .note { font-size: 12px; color: var(--fg-subtle); margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="header">Coral — customer-side primary</div>
+  <div class="row">
+    <div class="sw" style="background: var(--coral-50); color: var(--coral-700);"><div class="n">50</div><div class="v">#FFF1EE</div></div>
+    <div class="sw" style="background: var(--coral-100); color: var(--coral-700);"><div class="n">100</div><div class="v">#FFE0D8</div></div>
+    <div class="sw" style="background: var(--coral-200); color: var(--coral-700);"><div class="n">200</div><div class="v">#FFC4B5</div></div>
+    <div class="sw" style="background: var(--coral-300); color: white;"><div class="n">300</div><div class="v">#FF9F88</div></div>
+    <div class="sw" style="background: var(--coral-400); color: white;"><div class="n">400</div><div class="v">#FB7F66</div></div>
+    <div class="sw" style="background: var(--coral-500); color: white; outline: 2px solid var(--ink); outline-offset: -2px;"><div class="n">500 · base</div><div class="v">#EE5A5A</div></div>
+    <div class="sw" style="background: var(--coral-600); color: white;"><div class="n">600</div><div class="v">#D63F3F</div></div>
+    <div class="sw" style="background: var(--coral-700); color: white;"><div class="n">700</div><div class="v">#B22C2C</div></div>
+  </div>
+  <div class="note">Used on customer CTAs (Sign in, Continue), customer bottom-nav active state, connector arrows in flow diagrams, in-app badges.</div>
+</body>
+</html>

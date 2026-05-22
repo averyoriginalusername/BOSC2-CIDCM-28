@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Elevation</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 30px; background: var(--paper-2); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .card { width: 100%; height: 70px; background: var(--paper); border-radius: 14px; }
+  .name { font-family: var(--font-mono); font-size: 11px; color: var(--ink); font-weight: 500; }
+  .use { font-size: 10.5px; color: var(--fg-subtle); text-align: center; }
+</style>
+</head>
+<body>
+  <div class="item"><div class="card" style="box-shadow: var(--shadow-xs);"></div><div class="name">shadow-xs</div><div class="use">hairline lift</div></div>
+  <div class="item"><div class="card" style="box-shadow: var(--shadow-s);"></div><div class="name">shadow-s</div><div class="use">resting card</div></div>
+  <div class="item"><div class="card" style="box-shadow: var(--shadow-m);"></div><div class="name">shadow-m</div><div class="use">hover, popover</div></div>
+  <div class="item"><div class="card" style="box-shadow: var(--shadow-l);"></div><div class="name">shadow-l</div><div class="use">modal, drawer</div></div>
+</body>
+</html>

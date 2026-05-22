@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sourced — Neutrals</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 24px; background: var(--paper-2); font-family: var(--font-sans); }
+  .header { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .sw { padding: 14px; border-radius: 10px; aspect-ratio: 1.3 / 1; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(0,0,0,0.04); }
+  .lab { font-size: 11px; font-weight: 600; }
+  .val { font-family: var(--font-mono); font-size: 10px; opacity: 0.65; }
+  .role { font-size: 10px; opacity: 0.7; margin-top: auto; }
+  .note { font-size: 12px; color: var(--fg-subtle); margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="header">Warm neutrals — paper + ink</div>
+  <div class="grid">
+    <div class="sw" style="background: var(--paper); color: var(--ink);"><span class="lab">paper</span><span class="val">#FFFFFF</span><span class="role">card surface</span></div>
+    <div class="sw" style="background: var(--paper-2); color: var(--ink);"><span class="lab">paper-2</span><span class="val">#FAF7F2</span><span class="role">page bg</span></div>
+    <div class="sw" style="background: var(--paper-3); color: var(--ink);"><span class="lab">paper-3</span><span class="val">#F2EEE6</span><span class="role">section bg</span></div>
+    <div class="sw" style="background: var(--paper-4); color: var(--ink);"><span class="lab">paper-4</span><span class="val">#E8E2D6</span><span class="role">quiet chip</span></div>
+    <div class="sw" style="background: var(--line); color: var(--ink);"><span class="lab">line</span><span class="val">#ECE7E0</span><span class="role">hairline</span></div>
+    <div class="sw" style="background: var(--line-2); color: var(--ink);"><span class="lab">line-2</span><span class="val">#DCD5CB</span><span class="role">input border</span></div>
+    <div class="sw" style="background: var(--ink-4); color: var(--ink);"><span class="lab">ink-4</span><span class="val">#C7BFB5</span><span class="role">placeholder</span></div>
+    <div class="sw" style="background: var(--ink-3); color: white;"><span class="lab">ink-3</span><span class="val">#8C8278</span><span class="role">tertiary text</span></div>
+    <div class="sw" style="background: var(--ink-2); color: white;"><span class="lab">ink-2</span><span class="val">#4A413B</span><span class="role">secondary text</span></div>
+    <div class="sw" style="background: var(--ink); color: white;"><span class="lab">ink</span><span class="val">#1A1410</span><span class="role">primary text</span></div>
+  </div>
+  <div class="note">All neutrals carry a warm cast — slight peach/parchment. The brand never uses cool greys.</div>
+</body>
+</html>
