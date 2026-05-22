@@ -43,19 +43,23 @@
 const { useState } = React;
 
 const TABS = [
-  { k: 'creation', label: 'Creation',     icon: 'penTool',  url: 'creationpage' },
-  { k: 'payments', label: 'Payments',     icon: 'wallet',   url: 'payments' },
-  { k: 'calendar', label: 'Calendar',     icon: 'calendar', url: 'calendar' },
-  { k: 'clients',  label: 'Clients',      icon: 'users',    url: 'clientcontact' },
-  { k: 'messages', label: 'Messages',     icon: 'message',  url: 'messages' },
-  { k: 'profile',  label: 'Profile',      icon: 'edit',     url: 'profile' },
-  { k: 'account',  label: 'Account',      icon: 'user',     url: 'account' },
+  { k: 'creation', label: 'Creation Page', icon: 'penTool',  url: 'creationpage' },
+  { k: 'payments', label: 'Payments',      icon: 'wallet',   url: 'payments' },
+  { k: 'calendar', label: 'Calendar',      icon: 'calendar', url: 'calendar' },
+  { k: 'clients',  label: 'Client Contact',icon: 'users',    url: 'clientcontact' },
+  { k: 'messages', label: 'Messages',      icon: 'message',  url: 'messages' },
+  { k: 'profile',  label: 'Profile',       icon: 'edit',     url: 'profile' },
+  { k: 'account',  label: 'Account',       icon: 'user',     url: 'account' },
 ];
 
 const FLOW_SCREENS = ['login', 'signup', 'workspace'];
 
 function App() {
-  const [flow, setFlow] = useState('workspace'); // login | signup | workspace
+  const initialFlow = (() => {
+    const v = new URLSearchParams(window.location.search).get('view');
+    return v === 'login' || v === 'signup' ? v : 'workspace';
+  })();
+  const [flow, setFlow] = useState(initialFlow); // login | signup | workspace
   const [tab, setTab] = useState('creation');
 
   const SCREENS = {

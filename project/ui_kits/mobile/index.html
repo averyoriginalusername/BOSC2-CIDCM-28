@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourced — Mobile App Demo</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #ECE7E0; min-height: 100vh; font-family: 'Outfit', system-ui, sans-serif; color: #1A1410; }
+  .canvas { padding: 32px 24px 80px; }
+  .header { max-width: 1200px; margin: 0 auto 24px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .title { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 32px; letter-spacing: -0.005em; color: #1A1410; line-height: 1; }
+  .subtitle { font-size: 13px; color: #8C8278; max-width: 560px; line-height: 1.5; }
+  .eyebrow { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #8C8278; font-weight: 600; }
+  .controls { max-width: 1200px; margin: 0 auto 28px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .pill { padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid #DCD5CB; color: #1A1410; font-family: 'Outfit', sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+  .pill.active { background: #1A1410; color: #fff; border-color: #1A1410; }
+  .pill.coral.active { background: #EE5A5A; border-color: #EE5A5A; }
+  .pill.lilac.active { background: #6B5BD3; border-color: #6B5BD3; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #8C8278; text-decoration: none; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid #DCD5CB; background: #fff; }
+
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .phone-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8C8278; font-weight: 600; text-align: center; }
+
+  /* Flow (single phone) layout */
+  .flow-stage { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr 240px; gap: 28px; align-items: start; }
+  .flow-side { background: #fff; border: 1px solid #ECE7E0; border-radius: 18px; padding: 18px; font-size: 12.5px; color: #4A413B; }
+  .flow-side h4 { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8C8278; margin: 0 0 10px; }
+  .flow-side ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+  .flow-side li { padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; color: #4A413B; }
+  .flow-side li.active { background: #F2EEE6; color: #1A1410; font-weight: 600; }
+  .flow-side li:hover { background: #FAF7F2; }
+
+  /* Tour grid */
+  .grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 36px 28px; justify-items: center; align-items: start; }
+
+  @media (max-width: 1000px) {
+    .flow-stage { grid-template-columns: 1fr; }
+    .flow-side { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens-auth.jsx"></script>
+<script type="text/babel" src="screens-client.jsx"></script>
+<script type="text/babel" src="screens-stylist.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// =====================================================================
+// SCREEN REGISTRY
+// id, label, component, role (only renders for this role), navTab (which tab is active)
+// =====================================================================
+const SCREENS = [
+  // Shared auth
+  { id: 'sign-in',        label: 'Sign in',        Comp: SignInScreen,         showNav: false },
+  { id: 'sign-up',        label: 'Sign up',        Comp: SignUpScreen,         showNav: false },
+  { id: 'role',           label: 'Role select',    Comp: RoleSelectScreen,    showNav: false },
+
+  // Client onboarding + tabs
+  { id: 'quiz',           label: 'Style quiz',       Comp: QuizScreen,           showNav: false, role: 'client' },
+  { id: 'profile-setup',  label: 'Profile setup',    Comp: ProfileSetupScreen,   showNav: false, role: 'client' },
+  { id: 'profile-detail', label: 'Profile detail',   Comp: ProfileDetailScreen,  showNav: false, role: 'client' },
+  { id: 'home',           label: 'Client · Home',    Comp: HomeScreen,           showNav: true,  role: 'client', activeNav: 'home' },
+  { id: 'bookings',       label: 'Bookings',         Comp: BookingsScreen,       showNav: true,  role: 'client', activeNav: 'calendar' },
+  { id: 'messages-list',  label: 'Messages',         Comp: MessagesListScreen,   showNav: true,  role: 'client', activeNav: 'message' },
+  { id: 'account',        label: 'Account',          Comp: AccountScreen,        showNav: true,  role: 'client', activeNav: 'user' },
+  { id: 'filter',         label: 'Filter match',     Comp: FilterScreen,         showNav: false, role: 'client' },
+  { id: 'stylist',        label: 'Stylist detail',   Comp: StylistScreen,        showNav: false, role: 'client' },
+  { id: 'chat',           label: 'Chat',             Comp: ChatScreen,           showNav: false, role: 'client' },
+  { id: 'complete',       label: 'Complete',         Comp: CompleteScreen,       showNav: false, role: 'client' },
+  { id: 'review',         label: 'Review',           Comp: ReviewScreen,         showNav: false, role: 'client' },
+  { id: 'thank-you',      label: 'Thank you',        Comp: ThankYouScreen,       showNav: false, role: 'client' },
+  { id: 'ipa-quiz',       label: 'IPA quiz',         Comp: IPAQuizScreen,        showNav: false, role: 'client' },
+  { id: 'stylist-ipa-quiz', label: 'IPA quiz (stylist)', Comp: IPAQuizScreen,    showNav: false, role: 'stylist' },
+  { id: 'loyalty',        label: 'Collective',       Comp: LoyaltyScreen,        showNav: true,  role: 'client', activeNav: 'user' },
+  { id: 'tier-compare',   label: 'Tiers',            Comp: TierCompareScreen,    showNav: false, role: 'client' },
+  { id: 'invite',         label: 'Invite friend',    Comp: InviteFriendScreen,   showNav: false, role: 'client' },
+  { id: 'points-history', label: 'Points history',   Comp: PointsHistoryScreen,  showNav: false, role: 'client' },
+
+  // Stylist onboarding + tabs
+  { id: 'stylist-setup',         label: 'Stylist profile',   Comp: StylistSetupScreen,         showNav: false, role: 'stylist' },
+  { id: 'stylist-home',          label: 'Stylist · Home',    Comp: StylistHomeScreen,          showNav: true,  role: 'stylist', activeNav: 'home' },
+  { id: 'calendar',              label: 'Calendar',          Comp: CalendarScreen,             showNav: true,  role: 'stylist', activeNav: 'calendar' },
+  { id: 'stylist-messages-list', label: 'Stylist · Messages',Comp: StylistMessagesListScreen,  showNav: true,  role: 'stylist', activeNav: 'message' },
+  { id: 'stylist-chat',          label: 'Stylist · Chat',    Comp: StylistChatScreen,          showNav: false, role: 'stylist' },
+  { id: 'clients',               label: 'Clients',           Comp: ClientsScreen,              showNav: true,  role: 'stylist', activeNav: 'users' },
+  { id: 'client-detail',         label: 'Client detail',     Comp: ClientDetailScreen,         showNav: false, role: 'stylist' },
+  { id: 'payments',              label: 'Payments',          Comp: PaymentsScreen,             showNav: false, role: 'stylist' },
+  { id: 'stylist-account',       label: 'Stylist · Account', Comp: StylistAccountScreen,       showNav: true,  role: 'stylist', activeNav: 'user' },
+];
+
+// Tab key → screen id, per role
+function navTarget(navKey, role) {
+  if (role === 'stylist') {
+    return ({ home: 'stylist-home', calendar: 'calendar', message: 'stylist-messages-list', users: 'clients', user: 'stylist-account' })[navKey] || 'stylist-home';
+  }
+  return ({ home: 'home', calendar: 'bookings', message: 'messages-list', user: 'account' })[navKey] || 'home';
+}
+
+function Phone({ screenId, state, set, mode = 'flow' }) {
+  const s = SCREENS.find(x => x.id === screenId) || SCREENS[0];
+  const Comp = s.Comp;
+  const role = state.role || (s.role === 'stylist' ? 'stylist' : 'client');
+  const go = (next) => {
+    if (mode === 'tour') return;
+    set({ screen: next });
+  };
+  return (
+    <IOSDevice width={390} height={780}>
+      <div style={{ position: 'relative', minHeight: '100%' }}>
+        <div style={{ paddingTop: 56 }}>
+          <Comp go={go} state={state} set={(p) => set({ ...state, ...p })}/>
+        </div>
+        {s.showNav && (
+          <BottomNav
+            active={s.activeNav || 'home'}
+            role={role}
+            onChange={(k) => go(navTarget(k, role))}/>
+        )}
+      </div>
+    </IOSDevice>
+  );
+}
+
+function getInitialState() {
+  // Read query params: ?role=stylist&screen=home
+  const params = new URLSearchParams(window.location.search);
+  const roleParam = params.get('role');
+  const screenParam = params.get('screen');
+  return {
+    role: roleParam === 'stylist' ? 'stylist' : 'client',
+    styleTags: ['boho', 'Chic'],
+    colors: ['#E94560', '#D9A78E'],
+    need: 'event',
+    ratings: { overall: 5, style: 5, comm: 5, value: 4, time: 5, ease: 5 },
+    screen: screenParam || 'sign-in',
+  };
+}
+
+function App() {
+  const [mode, setMode] = useState('flow'); // 'flow' or 'tour'
+  const [state, setState] = useState(getInitialState());
+
+  const visibleScreens = SCREENS.filter(s => !s.role || s.role === state.role);
+  const groupClient = visibleScreens.filter(s => !s.role || s.role === 'client');
+  const groupStylist = visibleScreens.filter(s => s.role === 'stylist');
+
+  return (
+    <div className="canvas">
+      <div style={{ maxWidth: 1280, margin: '0 auto', marginBottom: 16 }}>
+        <a href="../index.html" className="back-link">← Back to Sourced.com</a>
+      </div>
+
+      <div className="header">
+        <div>
+          <div className="eyebrow">Sourced · Mobile app demo</div>
+          <h1 className="title" style={{marginTop: 4}}>One app · two roles</h1>
+          <p className="subtitle" style={{marginTop: 6}}>
+            Sign in, then sign up — and the app diverges between client onboarding (style quiz) and stylist onboarding (profile setup). Bottom-nav, tabs and content adapt to who you are.
+          </p>
+        </div>
+        <div className="controls">
+          <button className={'pill ' + (mode === 'flow' ? 'active' : '')} onClick={() => { setMode('flow'); setState(s => ({ ...s, screen: 'sign-in' })); }}>Click-thru prototype</button>
+          <button className={'pill ' + (mode === 'tour' ? 'active' : '')} onClick={() => setMode('tour')}>All screens</button>
+
+          {mode === 'flow' && (
+            <>
+              <span style={{ width: 1, height: 22, background: '#DCD5CB', margin: '0 6px' }}/>
+              <button
+                className={'pill coral ' + (state.role === 'client' ? 'active' : '')}
+                onClick={() => setState(s => ({ ...s, role: 'client', screen: 'home' }))}>
+                Skip to · Client app
+              </button>
+              <button
+                className={'pill lilac ' + (state.role === 'stylist' ? 'active' : '')}
+                onClick={() => setState(s => ({ ...s, role: 'stylist', screen: 'stylist-home' }))}>
+                Skip to · Stylist app
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {mode === 'flow' ? (
+        <div className="flow-stage">
+          <aside className="flow-side">
+            <h4>Auth + onboarding</h4>
+            <ul>
+              {['sign-in','sign-up','role'].map(id => {
+                const s = SCREENS.find(x => x.id === id);
+                return (
+                  <li key={id} className={state.screen === id ? 'active' : ''} onClick={() => setState(st => ({...st, screen: id }))}>{s.label}</li>
+                );
+              })}
+            </ul>
+            <h4 style={{marginTop: 18}}>Client flow</h4>
+            <ul>
+              {['quiz','profile-setup','profile-detail','home','bookings','messages-list','account','filter','stylist','chat','complete','review','thank-you','loyalty','tier-compare','invite','points-history','ipa-quiz'].map(id => {
+                const s = SCREENS.find(x => x.id === id);
+                return (
+                  <li key={id} className={state.screen === id ? 'active' : ''} onClick={() => setState(st => ({...st, screen: id, role: 'client' }))}>{s.label}</li>
+                );
+              })}
+            </ul>
+          </aside>
+
+          <div className="phone-wrap">
+            <Phone screenId={state.screen} state={state} set={setState} mode="flow"/>
+            <div className="phone-label">{(SCREENS.find(s => s.id === state.screen) || {}).label || 'Sign in'} — interactive</div>
+          </div>
+
+          <aside className="flow-side">
+            <h4>Stylist flow</h4>
+            <ul>
+              {['stylist-setup','stylist-home','calendar','clients','client-detail','stylist-messages-list','stylist-chat','payments','stylist-account','stylist-ipa-quiz'].map(id => {
+                const s = SCREENS.find(x => x.id === id);
+                return (
+                  <li key={id} className={state.screen === id ? 'active' : ''} onClick={() => setState(st => ({...st, screen: id, role: 'stylist' }))}>{s.label}</li>
+                );
+              })}
+            </ul>
+            <h4 style={{marginTop: 18}}>Demo tip</h4>
+            <p style={{margin: 0, fontSize: 11.5, color: '#8C8278', lineHeight: 1.4}}>
+              The bottom nav, button colors and account menu all change based on the active role. Start at <em>Sign in</em> to walk the full sign-up divergence.
+            </p>
+          </aside>
+        </div>
+      ) : (
+        <div>
+          <div style={{ maxWidth: 1280, margin: '0 auto 16px' }}>
+            <div className="eyebrow" style={{ marginBottom: 6 }}>SHARED ENTRY</div>
+          </div>
+          <div className="grid">
+            {SCREENS.filter(s => !s.role).map(s => (
+              <div key={s.id} className="phone-wrap">
+                <Phone screenId={s.id} state={state} set={setState} mode="tour"/>
+                <div className="phone-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ maxWidth: 1280, margin: '40px auto 16px' }}>
+            <div className="eyebrow" style={{ color: '#B22C2C', marginBottom: 6 }}>CLIENT FLOW</div>
+          </div>
+          <div className="grid">
+            {SCREENS.filter(s => s.role === 'client').map(s => (
+              <div key={s.id} className="phone-wrap">
+                <Phone screenId={s.id} state={{ ...state, role: 'client' }} set={setState} mode="tour"/>
+                <div className="phone-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ maxWidth: 1280, margin: '40px auto 16px' }}>
+            <div className="eyebrow" style={{ color: '#3F3294', marginBottom: 6 }}>STYLIST FLOW</div>
+          </div>
+          <div className="grid">
+            {SCREENS.filter(s => s.role === 'stylist').map(s => (
+              <div key={s.id} className="phone-wrap">
+                <Phone screenId={s.id} state={{ ...state, role: 'stylist' }} set={setState} mode="tour"/>
+                <div className="phone-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+</body>
+</html>

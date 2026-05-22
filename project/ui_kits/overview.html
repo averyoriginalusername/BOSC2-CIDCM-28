@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sourced — UI Kits</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #FAF7F2; font-family: 'Outfit', system-ui, sans-serif; color: #1A1410; }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    background: #1A1410;
+    padding: 72px 40px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url('../assets/photos/hero-rack.png') center 35%/cover;
+    opacity: 0.09;
+  }
+  .hero-eyebrow {
+    font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); font-weight: 600; position: relative;
+  }
+  .hero-wordmark {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400;
+    font-size: clamp(56px, 8vw, 96px);
+    color: #fff; margin: 16px 0 0;
+    letter-spacing: -0.015em; line-height: 0.95;
+    position: relative;
+  }
+  .hero-tagline {
+    font-size: 16px; color: rgba(255,255,255,0.55);
+    margin: 20px auto 0; max-width: 500px; line-height: 1.6;
+    position: relative;
+  }
+  .hero-pills {
+    display: flex; justify-content: center; gap: 10px;
+    margin-top: 36px; flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-pill {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.7); border-radius: 999px;
+    padding: 8px 16px; font-size: 12.5px; font-weight: 500; font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── APPS GRID ────────────────────────────────────── */
+  .apps {
+    max-width: 1120px; margin: 0 auto;
+    padding: 64px 32px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+  .app-card {
+    background: #fff; border: 1px solid #ECE7E0;
+    border-radius: 28px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(26,20,16,0.04);
+  }
+  .app-card-header {
+    padding: 28px 28px 24px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  }
+  .app-card-eyebrow {
+    font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .app-card-title {
+    font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+    font-size: 30px; letter-spacing: -0.01em; line-height: 1.05; color: #1A1410;
+  }
+  .app-card-sub {
+    font-size: 13.5px; color: #8C8278; margin-top: 8px; line-height: 1.55;
+  }
+  .app-screen-strip {
+    padding: 0 28px 28px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .screen-list {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+  .screen-pill {
+    font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 999px;
+    background: #F2EEE6; color: #4A413B;
+  }
+  .open-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 24px; border-radius: 999px;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700;
+    text-decoration: none; transition: opacity 140ms;
+  }
+  .open-btn:hover { opacity: 0.85; }
+  .open-btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 24px; border-radius: 999px;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+    text-decoration: none; background: transparent;
+    box-shadow: inset 0 0 0 1.5px #DCD5CB; color: #1A1410;
+    transition: background 140ms;
+  }
+  .open-btn-secondary:hover { background: #F2EEE6; }
+
+  /* Phone preview ── */
+  .phone-preview-wrap {
+    display: flex; justify-content: center;
+    padding: 0 0 12px;
+  }
+  .phone {
+    width: 220px; height: 440px; border-radius: 32px; overflow: hidden;
+    position: relative;
+    box-shadow: 0 24px 56px rgba(26,20,16,0.14), 0 0 0 1px rgba(26,20,16,0.1);
+  }
+  .phone::before {
+    content: ''; position: absolute;
+    top: 7px; left: 50%; transform: translateX(-50%);
+    width: 72px; height: 20px; border-radius: 12px;
+    background: #000; z-index: 10;
+  }
+  .phone-inner {
+    height: 100%; overflow: hidden; padding-top: 36px;
+  }
+  /* Status bar */
+  .phone-status {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 18px; height: 28px; position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+  }
+  .status-time { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+  .status-icons { display: flex; gap: 5px; align-items: center; font-size: 10px; }
+  /* Home indicator */
+  .home-ind {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 4px; border-radius: 999px;
+    background: rgba(0,0,0,0.2); z-index: 10;
+  }
+
+  /* ── DESIGN SYSTEM BAND ───────────────────────────── */
+  .ds-band {
+    background: #1A1410;
+    padding: 56px 40px;
+  }
+  .ds-band-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+  }
+  .ds-band-title {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 36px; font-weight: 400; color: #fff; letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .ds-band-sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+  .ds-tokens {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .color-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.12);
+  }
+  .ds-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 13.5px; font-weight: 600; transition: color 140ms;
+  }
+  .ds-link:hover { color: #fff; }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  .footer {
+    padding: 32px 40px; border-top: 1px solid #ECE7E0;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-wordmark {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 22px; font-weight: 400; color: #1A1410; letter-spacing: -0.01em;
+  }
+  .footer-caption { font-size: 12px; color: #8C8278; }
+</style>
+</head>
+<body>
+
+<!-- Banner -->
+<div style="background:#1A1410;color:#fff;padding:12px 24px;text-align:center;font-size:13px;font-family:'Outfit',sans-serif;">
+  This is the internal design-system overview. The product entry point is <a href="index.html" style="color:#EE5A5A;font-weight:600;text-decoration:underline;">the Sourced landing page</a>.
+</div>
+
+<!-- ── HERO ───────────────────────────────────────── -->
+<div class="hero">
+  <p class="hero-eyebrow">Design System · UI Kits</p>
+  <h1 class="hero-wordmark">Sourced</h1>
+  <p class="hero-tagline">A two-sided fashion marketplace connecting clients with personal stylists. One app for mobile (client + stylist), one workspace for stylist desktop, one design system, built from the wireframes.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">Instrument Serif · Outfit · JetBrains Mono</span>
+    <span class="hero-pill">Coral · Lilac · Warm Neutrals</span>
+    <span class="hero-pill">Unified mobile + stylist desktop</span>
+  </div>
+</div>
+
+<!-- Unified app callout -->
+<div style="max-width:1120px;margin:48px auto 0;padding:0 32px;">
+  <div style="background:#1A1410;color:#fff;border-radius:24px;padding:32px 36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;">
+    <div>
+      <p style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55);font-weight:600;margin:0;">PRIMARY DEMO</p>
+      <h2 style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:36px;letter-spacing:-0.01em;margin:8px 0 6px;">One mobile app · two roles</h2>
+      <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.55;margin:0;max-width:520px;">Sign in → sign up → role select. Customers take a style quiz; stylists build a public profile. Tabs, colors and account menus adapt to the active role.</p>
+    </div>
+    <a href="mobile/index.html" style="background:#EE5A5A;color:#fff;text-decoration:none;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 28px;border-radius:999px;font-size:14.5px;white-space:nowrap;">Open mobile demo →</a>
+  </div>
+</div>
+
+<!-- ── APPS GRID ─────────────────────────────────── -->
+<div class="apps">
+
+  <!-- CUSTOMER APP ─── -->
+  <div class="app-card">
+    <div class="app-card-header">
+      <div>
+        <p class="app-card-eyebrow" style="color:#EE5A5A;">For Clients</p>
+        <h2 class="app-card-title">Customer<br>mobile app</h2>
+        <p class="app-card-sub">Sign in, style quiz, stylist matching, chat, review, loyalty rewards — the full client experience, from first booking to SOURCED Collective.</p>
+      </div>
+    </div>
+
+    <!-- Phone preview -->
+    <div class="phone-preview-wrap">
+      <div class="phone" style="background:#FAF7F2;">
+        <div class="phone-status" style="color:#1A1410;">
+          <span class="status-time">9:41</span>
+          <span class="status-icons">▲▲▲ 🔋</span>
+        </div>
+        <div class="home-ind" style="background:rgba(0,0,0,0.22);"></div>
+        <div class="phone-inner" style="padding:0; overflow:hidden;">
+          <!-- Mini home screen -->
+          <div style="padding:14px 16px 12px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:9px; color:#8C8278; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; margin:0;">TUESDAY · MAY 21</p>
+              <h3 style="font-family:'Instrument Serif',serif; font-style:italic; font-size:20px; color:#1A1410; margin:3px 0 0; font-weight:400;">Hello, Olivia</h3>
+            </div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#E6DFFF;"></div>
+          </div>
+          <!-- Hero card -->
+          <div style="margin:0 16px; background:#1A1410; border-radius:14px; padding:14px; position:relative; overflow:hidden;">
+            <div style="position:absolute;inset:0;background:url('../assets/photos/hero-rack.png') right/cover;opacity:0.35;"></div>
+            <div style="position:relative;">
+              <p style="font-size:8px; color:rgba(255,255,255,0.65); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin:0;">FOR YOU</p>
+              <p style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#fff; margin:4px 0 10px; font-weight:400; max-width:70%; line-height:1.2;">3 stylists matched to your style</p>
+              <span style="background:#fff; color:#1A1410; font-size:10px; font-weight:700; padding:5px 12px; border-radius:999px; font-family:'Outfit',sans-serif;">View matches →</span>
+            </div>
+          </div>
+          <!-- Stylists -->
+          <div style="padding:14px 16px 0;">
+            <p style="font-size:11px; font-weight:600; color:#1A1410; margin:0 0 8px;">Top matches</p>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="background:#fff; border:1px solid #ECE7E0; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:center;">
+                <div style="width:44px;height:56px;border-radius:8px;background:url('../assets/photos/model-blazer-coffee.png') center/cover;flex-shrink:0;"></div>
+                <div>
+                  <span style="background:#E6DFFF; color:#3F3294; font-size:7px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.1em;">WEDDING</span>
+                  <div style="font-size:12px; font-weight:700; color:#1A1410; margin-top:3px; font-family:'Outfit',sans-serif;">Sophia Laurent</div>
+                  <div style="font-size:10px; color:#8C8278;">★ 4.9 · $20/hr</div>
+                </div>
+              </div>
+              <div style="background:#fff; border:1px solid #ECE7E0; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:center;">
+                <div style="width:44px;height:56px;border-radius:8px;background:url('../assets/photos/model-sunglasses.png') center/cover;flex-shrink:0;"></div>
+                <div>
+                  <span style="background:#FFE0D8; color:#B22C2C; font-size:7px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.1em;">COTTAGE CORE</span>
+                  <div style="font-size:12px; font-weight:700; color:#1A1410; margin-top:3px; font-family:'Outfit',sans-serif;">Mandy Chen</div>
+                  <div style="font-size:10px; color:#8C8278;">★ 4.8 · $24/hr</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Bottom nav -->
+          <div style="position:absolute; bottom:18px; left:10px; right:10px; background:#fff; border-radius:18px; padding:8px 4px; display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #ECE7E0; box-shadow:0 4px 12px rgba(26,20,16,0.08);">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="width:18px;height:18px;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23EE5A5A\" stroke-width=\"1.8\"><path d=\"M3 12l9-9 9 9\"/><path d=\"M5 10v10h14V10\"/></svg>') center/contain no-repeat;"></div>
+              <span style="font-size:8px; font-weight:600; color:#EE5A5A;">Home</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="width:18px;height:18px;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%238C8278\" stroke-width=\"1.8\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 9h18M8 3v4M16 3v4\"/></svg>') center/contain no-repeat;"></div>
+              <span style="font-size:8px; color:#8C8278;">Bookings</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="width:18px;height:18px;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%238C8278\" stroke-width=\"1.8\"><path d=\"M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z\"/></svg>') center/contain no-repeat;"></div>
+              <span style="font-size:8px; color:#8C8278;">Messages</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="width:18px;height:18px;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%238C8278\" stroke-width=\"1.8\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8\"/></svg>') center/contain no-repeat;"></div>
+              <span style="font-size:8px; color:#8C8278;">Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-screen-strip">
+      <div>
+        <p style="font-size:11px; color:#8C8278; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; margin:0 0 8px;">20 screens</p>
+        <div class="screen-list">
+          <span class="screen-pill">Sign in</span>
+          <span class="screen-pill">Sign up</span>
+          <span class="screen-pill">Role select</span>
+          <span class="screen-pill">Style quiz</span>
+          <span class="screen-pill">Profile setup</span>
+          <span class="screen-pill">Home</span>
+          <span class="screen-pill">Bookings</span>
+          <span class="screen-pill">Filter match</span>
+          <span class="screen-pill">Stylist profile</span>
+          <span class="screen-pill">Chat</span>
+          <span class="screen-pill">Complete</span>
+          <span class="screen-pill">Review</span>
+          <span class="screen-pill">Thank you</span>
+          <span class="screen-pill">Account</span>
+          <span class="screen-pill">IPA quiz</span>
+          <span class="screen-pill">Collective</span>
+          <span class="screen-pill">Tiers</span>
+          <span class="screen-pill">Invite friend</span>
+          <span class="screen-pill">Points history</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="customer/index.html" class="open-btn" style="background:#EE5A5A; color:#fff;">Open customer app →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STYLIST APP ─── -->
+  <div class="app-card">
+    <div class="app-card-header">
+      <div>
+        <p class="app-card-eyebrow" style="color:#6B5BD3;">For Stylists</p>
+        <h2 class="app-card-title">Stylist<br>mobile app</h2>
+        <p class="app-card-sub">Sign in, dashboard, client roster, calendar, messaging, payments, and profile — the full stylist workspace in your pocket.</p>
+      </div>
+    </div>
+
+    <!-- Phone preview -->
+    <div class="phone-preview-wrap">
+      <div class="phone" style="background:#FAF7F2;">
+        <div class="phone-status" style="color:#1A1410;">
+          <span class="status-time">9:41</span>
+          <span class="status-icons">▲▲▲ 🔋</span>
+        </div>
+        <div class="home-ind" style="background:rgba(0,0,0,0.22);"></div>
+        <div class="phone-inner" style="padding:0; overflow:hidden;">
+          <!-- Mini stylist home screen -->
+          <div style="padding:14px 16px 12px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:9px; color:#8C8278; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; margin:0;">TUESDAY · MAY 21</p>
+              <h3 style="font-family:'Instrument Serif',serif; font-style:italic; font-size:20px; color:#1A1410; margin:3px 0 0; font-weight:400;">Good morning, Sophia</h3>
+            </div>
+            <div style="width:32px;height:32px;border-radius:50%;background:url('../assets/photos/model-blazer-coffee.png') center/cover; box-shadow:0 0 0 2px #fff, 0 0 0 4px #6B5BD3;"></div>
+          </div>
+          <!-- Stats -->
+          <div style="padding:0 16px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            <div style="background:#fff; border:1px solid #ECE7E0; border-radius:10px; padding:8px 6px; text-align:center;">
+              <div style="font-size:17px; font-weight:600; color:#1A1410; font-family:'Outfit',sans-serif; letter-spacing:-0.01em;">12</div>
+              <div style="font-size:8px; color:#8C8278; letter-spacing:0.08em; text-transform:uppercase;">Clients</div>
+            </div>
+            <div style="background:#fff; border:1px solid #ECE7E0; border-radius:10px; padding:8px 6px; text-align:center;">
+              <div style="font-size:17px; font-weight:600; color:#1A1410; font-family:'Outfit',sans-serif; letter-spacing:-0.01em;">34</div>
+              <div style="font-size:8px; color:#8C8278; letter-spacing:0.08em; text-transform:uppercase;">Sessions</div>
+            </div>
+            <div style="background:#fff; border:1px solid #ECE7E0; border-radius:10px; padding:8px 6px; text-align:center;">
+              <div style="font-size:14px; font-weight:600; color:#1A1410; font-family:'Outfit',sans-serif; letter-spacing:-0.01em;">$3.2k</div>
+              <div style="font-size:8px; color:#8C8278; letter-spacing:0.08em; text-transform:uppercase;">Earned</div>
+            </div>
+          </div>
+          <!-- Inquiries card -->
+          <div style="margin:10px 16px 0; background:#1A1410; border-radius:14px; padding:14px; position:relative; overflow:hidden;">
+            <div style="position:absolute;inset:0;background:url('../assets/photos/hero-rack.png') right/cover;opacity:0.3;"></div>
+            <div style="position:relative;">
+              <p style="font-size:8px; color:rgba(255,255,255,0.65); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin:0;">NEW INQUIRIES</p>
+              <p style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#fff; margin:4px 0 10px; font-weight:400; max-width:70%; line-height:1.2;">3 clients waiting on you</p>
+              <span style="background:#fff; color:#1A1410; font-size:10px; font-weight:700; padding:5px 12px; border-radius:999px; font-family:'Outfit',sans-serif;">Open inbox →</span>
+            </div>
+          </div>
+          <!-- Sessions -->
+          <div style="padding:12px 16px 0;">
+            <p style="font-size:11px; font-weight:600; color:#1A1410; margin:0 0 8px;">Today's sessions</p>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="background:#fff; border:1px solid #ECE7E0; border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;">
+                <div style="width:28px;height:28px;border-radius:50%;background:url('../assets/photos/model-sunglasses.png') center/cover;flex-shrink:0;"></div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:11px; font-weight:600; color:#1A1410; font-family:'Outfit',sans-serif;">Olivia Martinez</div>
+                  <div style="font-size:9.5px; color:#8C8278;">Bergdorf · Studio 3</div>
+                </div>
+                <div style="font-size:9.5px; color:#6B5BD3; font-weight:700;">10:00 AM</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ECE7E0; border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;">
+                <div style="width:28px;height:28px;border-radius:50%;background:url('../assets/photos/model-selfie-blazer.png') center/cover;flex-shrink:0;"></div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:11px; font-weight:600; color:#1A1410; font-family:'Outfit',sans-serif;">Amelia Park</div>
+                  <div style="font-size:9.5px; color:#8C8278;">Video call</div>
+                </div>
+                <div style="font-size:9.5px; color:#6B5BD3; font-weight:700;">2:30 PM</div>
+              </div>
+            </div>
+          </div>
+          <!-- Bottom nav — 5 items -->
+          <div style="position:absolute; bottom:18px; left:8px; right:8px; background:#fff; border-radius:18px; padding:8px 4px; display:grid; grid-template-columns:repeat(5,1fr); border:1px solid #ECE7E0; box-shadow:0 4px 12px rgba(26,20,16,0.08);">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <span style="font-size:14px; line-height:1; color:#6B5BD3;">⌂</span>
+              <span style="font-size:7px; font-weight:600; color:#6B5BD3;">Home</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <span style="font-size:14px; line-height:1; color:#8C8278;">📅</span>
+              <span style="font-size:7px; color:#8C8278;">Cal</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <span style="font-size:14px; line-height:1; color:#8C8278;">💬</span>
+              <span style="font-size:7px; color:#8C8278;">Msgs</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <span style="font-size:14px; line-height:1; color:#8C8278;">👥</span>
+              <span style="font-size:7px; color:#8C8278;">Clients</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <span style="font-size:14px; line-height:1; color:#8C8278;">👤</span>
+              <span style="font-size:7px; color:#8C8278;">Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-screen-strip">
+      <div>
+        <p style="font-size:11px; color:#8C8278; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; margin:0 0 8px;">10 screens</p>
+        <div class="screen-list">
+          <span class="screen-pill">Sign in</span>
+          <span class="screen-pill">Sign up</span>
+          <span class="screen-pill">Home</span>
+          <span class="screen-pill">Calendar</span>
+          <span class="screen-pill">Clients</span>
+          <span class="screen-pill">Client detail</span>
+          <span class="screen-pill">Messages</span>
+          <span class="screen-pill">Chat</span>
+          <span class="screen-pill">Payments</span>
+          <span class="screen-pill">Account</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="shopper-mobile/index.html" class="open-btn" style="background:#6B5BD3; color:#fff;">Open stylist app →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── DESIGN SYSTEM BAND ──────────────────────────── -->
+<div class="ds-band">
+  <div class="ds-band-inner">
+    <div>
+      <h3 class="ds-band-title">Design tokens & brand</h3>
+      <p class="ds-band-sub">CSS variables, typography specimens, color scales, spacing, elevation, components.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px; align-items:flex-end;">
+      <div class="ds-tokens">
+        <div class="color-dot" style="background:#FFF1EE;"></div>
+        <div class="color-dot" style="background:#FFE0D8;"></div>
+        <div class="color-dot" style="background:#FB7F66;"></div>
+        <div class="color-dot" style="background:#EE5A5A;"></div>
+        <div class="color-dot" style="background:#D63F3F;"></div>
+        <div class="color-dot" style="width:1px; background:rgba(255,255,255,0.1);"></div>
+        <div class="color-dot" style="background:#F4F1FF;"></div>
+        <div class="color-dot" style="background:#E6DFFF;"></div>
+        <div class="color-dot" style="background:#A698F0;"></div>
+        <div class="color-dot" style="background:#6B5BD3;"></div>
+        <div class="color-dot" style="background:#5544B8;"></div>
+        <div class="color-dot" style="width:1px; background:rgba(255,255,255,0.1);"></div>
+        <div class="color-dot" style="background:#FAF7F2;"></div>
+        <div class="color-dot" style="background:#ECE7E0;"></div>
+        <div class="color-dot" style="background:#8C8278;"></div>
+        <div class="color-dot" style="background:#4A413B;"></div>
+        <div class="color-dot" style="background:#1A1410;"></div>
+      </div>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:flex-end;">
+        <a href="../preview/colors-coral.html" class="ds-link">Coral scale ↗</a>
+        <a href="../preview/colors-lilac.html" class="ds-link">Lilac scale ↗</a>
+        <a href="../preview/type-display.html" class="ds-link">Typography ↗</a>
+        <a href="../preview/buttons.html" class="ds-link">Components ↗</a>
+        <a href="../preview/logo.html" class="ds-link">Logo ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────── -->
+<div class="footer">
+  <span class="footer-wordmark">Sourced</span>
+  <span class="footer-caption">Design System · Two-sided fashion marketplace · UI kits built from wireframes</span>
+  <div style="display:flex; gap:16px;">
+    <a href="customer/index.html" style="font-size:12.5px; color:#8C8278; text-decoration:none; font-weight:500;">Customer app</a>
+    <a href="shopper-mobile/index.html" style="font-size:12.5px; color:#8C8278; text-decoration:none; font-weight:500;">Stylist app</a>
+    <a href="shopper/index.html" style="font-size:12.5px; color:#8C8278; text-decoration:none; font-weight:500;">Stylist desktop</a>
+    <a href="marketing/index.html" style="font-size:12.5px; color:#8C8278; text-decoration:none; font-weight:500;">Marketing site</a>
+  </div>
+</div>
+
+</body>
+</html>
