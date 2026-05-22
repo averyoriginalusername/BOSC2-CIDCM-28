@@ -77,7 +77,7 @@ const RoleSelectScreen = ({ go, state, set }) => (
       { k: 'stylist', tag: 'STYLIST', tagline: 'I want to style', desc: 'Build your client roster, manage bookings, and grow your styling business.', img: '../../assets/photos/model-blazer-coffee.png' },
     ].map(opt => (
       <button key={opt.k}
-        onClick={() => { set({ role: opt.k }); go(opt.k === 'client' ? 'quiz' : 'sign-in'); }}
+        onClick={() => { set({ role: opt.k }); go(opt.k === 'client' ? 'quiz' : 'stylist-app'); }}
         style={{
           textAlign: 'left', cursor: 'pointer',
           background: '#fff', border: state.role === opt.k ? '2px solid #1A1410' : '1px solid #ECE7E0',
@@ -459,7 +459,7 @@ const HomeScreen = ({ go }) => {
           <div style={{ position: 'relative' }}>
             <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600 }}>FOR YOU</p>
             <h2 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontStyle: 'italic', fontSize: 24, lineHeight: 1.15, marginTop: 4, color: '#fff', maxWidth: '70%' }}>3 stylists matched to your style</h2>
-            <button onClick={() => {}} style={{ marginTop: 14, background: '#fff', color: '#1A1410', border: 0, borderRadius: 999, padding: '8px 16px', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 600, cursor: 'pointer' }}>View matches →</button>
+            <button onClick={() => go('filter')} style={{ marginTop: 14, background: '#fff', color: '#1A1410', border: 0, borderRadius: 999, padding: '8px 16px', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 600, cursor: 'pointer' }}>View matches →</button>
           </div>
         </div>
 
@@ -832,11 +832,11 @@ const AccountScreen = ({ go }) => {
             </button>
           ))}
         </div>
+        <div style={{ marginTop: 14 }}>
+          <Button variant="ghost" fullWidth leftIcon="logout" style={{ color: '#C24545' }} onClick={() => go('sign-in')}>Sign out</Button>
+        </div>
       </div>
 
-      <div style={{ position: 'absolute', bottom: 110, left: 24 }}>
-        <Icon name="settings" size={20} stroke="#8C8278"/>
-      </div>
     </div>
   );
 };
@@ -1180,9 +1180,121 @@ const PointsHistoryScreen = ({ go }) => {
   );
 };
 
+// ---------- BOOKINGS (calendar nav) ----------
+const BookingsScreen = ({ go }) => {
+  const [tab, setTab] = React.useState('upcoming');
+  const upcoming = [
+    { stylist: 'Sophia Laurent', type: 'Wedding styling', date: 'Jun 12 · 10:00 AM', where: 'Bergdorf · Studio 3', status: 'confirmed', img: '../../assets/photos/model-blazer-coffee.png' },
+    { stylist: 'Martha Reyes',   type: 'Casual refresh',  date: 'Jun 24 · 2:30 PM',  where: 'Video call',         status: 'pending',   img: '../../assets/photos/model-selfie-blazer.png' },
+  ];
+  const past = [
+    { stylist: 'Sophia Laurent', type: 'Event outfit',    date: 'Apr 16',  where: 'Bergdorf · Studio 3', status: 'complete', rating: 5, img: '../../assets/photos/model-blazer-coffee.png' },
+    { stylist: 'Mandy Chen',     type: 'Wardrobe refresh',date: 'Feb 28',  where: 'Video call',          status: 'complete', rating: 4, img: '../../assets/photos/model-sunglasses.png' },
+  ];
+  const items = tab === 'upcoming' ? upcoming : past;
+  const statusColor = { confirmed: { bg: '#E8F5EC', fg: '#4B8B5A' }, pending: { bg: '#FFF5E6', fg: '#D89A3E' }, complete: { bg: '#F2EEE6', fg: '#8C8278' } };
+  return (
+    <div style={{ background: '#FAF7F2', minHeight: '100%', padding: '20px 0 120px' }}>
+      <div style={{ padding: '0 24px 16px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600, margin: 0 }}>MY SESSIONS</p>
+          <h1 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontStyle: 'italic', fontSize: 30, color: '#1A1410', letterSpacing: '-0.01em', marginTop: 4 }}>Bookings</h1>
+        </div>
+        <button onClick={() => go('home')} style={{ width: 36, height: 36, borderRadius: '50%', background: '#EE5A5A', border: 0, cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
+          <Icon name="plus" size={18} stroke="#fff" strokeWidth={2}/>
+        </button>
+      </div>
+
+      <div style={{ padding: '0 24px 16px', display: 'flex', gap: 6 }}>
+        <Chip active={tab === 'upcoming'} variant="coral" size="sm" onClick={() => setTab('upcoming')}>Upcoming</Chip>
+        <Chip active={tab === 'past'} variant="quiet" size="sm" onClick={() => setTab('past')}>Past</Chip>
+      </div>
+
+      <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {items.map((b, i) => (
+          <div key={i} style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 16, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', gap: 12, padding: 14, alignItems: 'center' }}>
+              <div style={{ width: 52, height: 64, borderRadius: 10, background: `url(${b.img}) center/cover`, flexShrink: 0 }}/>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14.5, color: '#1A1410' }}>{b.stylist}</div>
+                <div style={{ fontSize: 12.5, color: '#6B5BD3', marginTop: 2 }}>{b.type}</div>
+                <div style={{ fontSize: 12, color: '#8C8278', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Icon name="calendar" size={11} stroke="#8C8278"/> {b.date}
+                </div>
+                <div style={{ fontSize: 12, color: '#8C8278' }}>{b.where}</div>
+              </div>
+              <span style={{
+                fontSize: 9.5, fontWeight: 700, padding: '4px 9px', borderRadius: 999,
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                background: statusColor[b.status].bg, color: statusColor[b.status].fg,
+              }}>{b.status}</span>
+            </div>
+            {tab === 'upcoming' && (
+              <div style={{ borderTop: '1px solid #ECE7E0', display: 'flex', gap: 8, padding: '10px 14px' }}>
+                <Button variant="soft" size="sm" onClick={() => go('chat')}>Message</Button>
+                <Button variant="ghost" size="sm" style={{ color: '#C24545' }}>Cancel</Button>
+              </div>
+            )}
+            {tab === 'past' && b.rating && (
+              <div style={{ borderTop: '1px solid #ECE7E0', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', gap: 2 }}>
+                  {[1,2,3,4,5].map(s => <Icon key={s} name={s <= b.rating ? 'star' : 'starOutline'} size={14} stroke="#EE5A5A" strokeWidth={1.5}/>)}
+                </div>
+                <Button variant="soft" size="sm" onClick={() => go('home')}>Book again</Button>
+              </div>
+            )}
+          </div>
+        ))}
+
+        {tab === 'upcoming' && (
+          <button onClick={() => go('home')} style={{ background: 'transparent', border: '1.5px dashed #DCD5CB', borderRadius: 16, padding: '20px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#8C8278', fontFamily: "'Outfit',sans-serif", fontSize: 14 }}>
+            <Icon name="plus" size={18} stroke="#8C8278" strokeWidth={1.6}/>
+            Book a new session
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ---------- STYLIST REDIRECT (role select → stylist) ----------
+const StylistAppScreen = ({ go }) => (
+  <div style={{ background: '#6B5BD3', minHeight: '100%', padding: '60px 28px 120px', display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center', textAlign: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 20 }}>
+      <Logo size={52} color="#fff"/>
+      <WordmarkCaps size={11} color="rgba(255,255,255,0.7)"/>
+      <span style={{ fontSize: 9.5, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>FOR STYLISTS</span>
+    </div>
+    <div>
+      <h1 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontStyle: 'italic', fontSize: 34, color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.1 }}>You're a stylist!</h1>
+      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, marginTop: 10 }}>Great news — Sourced has a dedicated app for stylists. Manage clients, bookings, earnings, and your brand from the stylist workspace.</p>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+      <a href="../shopper-mobile/index.html"
+         style={{ display: 'block', background: '#fff', color: '#6B5BD3', borderRadius: 999, padding: '16px 24px', fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, textDecoration: 'none', textAlign: 'center' }}>
+        Open Stylist App →
+      </a>
+      <button onClick={() => go('role')} style={{ background: 'transparent', border: '1.5px solid rgba(255,255,255,0.3)', borderRadius: 999, padding: '14px 24px', color: 'rgba(255,255,255,0.75)', fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
+        ← Back to role select
+      </button>
+    </div>
+    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 16, padding: 16, width: '100%', marginTop: 8 }}>
+      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, margin: '0 0 8px' }}>STYLIST APP INCLUDES</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {['Client roster & management', 'Calendar & scheduling', 'In-app messaging & contracts', 'Finance tracker & invoices', 'Profile & portfolio builder'].map(f => (
+          <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
+            <Icon name="check" size={13} stroke="rgba(255,255,255,0.7)" strokeWidth={2}/>
+            {f}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 Object.assign(window, {
   SignInScreen, SignUpScreen, RoleSelectScreen, QuizScreen, ProfileSetupScreen, ProfileDetailScreen,
-  HomeScreen, MessagesListScreen, FilterScreen,
+  HomeScreen, MessagesListScreen, FilterScreen, BookingsScreen, StylistAppScreen,
   StylistScreen, ChatScreen, CompleteScreen, ReviewScreen, ThankYouScreen,
   AccountScreen, IPAQuizScreen, LoyaltyScreen, TierCompareScreen, InviteFriendScreen, PointsHistoryScreen,
   ChatBubble,

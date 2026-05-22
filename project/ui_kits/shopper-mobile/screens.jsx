@@ -91,17 +91,17 @@ const HomeScreen = ({ go }) => {
       {/* Stats row */}
       <div style={{ padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
         {[
-          { l: 'Clients', v: '12', d: '+2' },
-          { l: 'Sessions', v: '34', d: '+8%' },
-          { l: 'Earnings', v: '$3.2k', d: '+12%' },
+          { l: 'Clients', v: '12', d: '+2', nav: 'clients' },
+          { l: 'Sessions', v: '34', d: '+8%', nav: 'calendar' },
+          { l: 'Earnings', v: '$3.2k', d: '+12%', nav: 'payments' },
         ].map(s => (
-          <div key={s.l} style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 14, padding: 12 }}>
+          <button key={s.l} onClick={() => go(s.nav)} style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 14, padding: 12, cursor: 'pointer', textAlign: 'left' }}>
             <div style={{ fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>{s.l}</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
               <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 500, color: '#1A1410', letterSpacing: '-0.01em' }}>{s.v}</span>
               <span style={{ fontSize: 10.5, color: '#4B8B5A', fontWeight: 500 }}>{s.d}</span>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 

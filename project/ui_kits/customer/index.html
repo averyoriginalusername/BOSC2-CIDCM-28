@@ -17,6 +17,7 @@
   .controls { max-width: 1200px; margin: 0 auto 28px; display: flex; gap: 8px; flex-wrap: wrap; }
   .pill { padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid #DCD5CB; color: #1A1410; font-family: 'Outfit', sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; }
   .pill.active { background: #1A1410; color: #fff; border-color: #1A1410; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #8C8278; text-decoration: none; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid #DCD5CB; background: #fff; }
 </style>
 </head>
 <body>
@@ -37,25 +38,27 @@ const { useState } = React;
 // Mode B: prototype — single phone, navigable
 
 const SCREENS = [
-  { id: 'sign-in',        label: 'Sign in', Comp: SignInScreen, showNav: false },
-  { id: 'sign-up',        label: 'Sign up', Comp: SignUpScreen, showNav: false },
-  { id: 'role',           label: 'Role select', Comp: RoleSelectScreen, showNav: false },
-  { id: 'quiz',           label: 'Style quiz', Comp: QuizScreen, showNav: false },
-  { id: 'profile-setup',  label: 'Profile setup', Comp: ProfileSetupScreen, showNav: false },
+  { id: 'sign-in',        label: 'Sign in',        Comp: SignInScreen,         showNav: false },
+  { id: 'sign-up',        label: 'Sign up',        Comp: SignUpScreen,         showNav: false },
+  { id: 'role',           label: 'Role select',    Comp: RoleSelectScreen,    showNav: false },
+  { id: 'stylist-app',    label: 'Stylist app',    Comp: StylistAppScreen,    showNav: false },
+  { id: 'quiz',           label: 'Style quiz',     Comp: QuizScreen,          showNav: false },
+  { id: 'profile-setup',  label: 'Profile setup',  Comp: ProfileSetupScreen,  showNav: false },
   { id: 'profile-detail', label: 'Profile detail', Comp: ProfileDetailScreen, showNav: false },
-  { id: 'home',           label: 'Home', Comp: HomeScreen, showNav: true, active: 'home' },
-  { id: 'filter',         label: 'Filter match', Comp: FilterScreen, showNav: false },
-  { id: 'messages-list',  label: 'Messages list', Comp: MessagesListScreen, showNav: true, active: 'message' },
-  { id: 'stylist',        label: 'Stylist', Comp: StylistScreen, showNav: false },
-  { id: 'chat',           label: 'Chat', Comp: ChatScreen, showNav: false },
-  { id: 'complete',       label: 'Complete', Comp: CompleteScreen, showNav: false },
-  { id: 'review',         label: 'Review', Comp: ReviewScreen, showNav: false },
-  { id: 'thank-you',      label: 'Thank you', Comp: ThankYouScreen, showNav: false },
-  { id: 'account',        label: 'Account', Comp: AccountScreen, showNav: false, active: 'user' },
-  { id: 'ipa-quiz',       label: 'IPA quiz', Comp: IPAQuizScreen, showNav: false },
-  { id: 'loyalty',        label: 'Collective', Comp: LoyaltyScreen, showNav: false, active: 'user' },
-  { id: 'tier-compare',   label: 'Tiers', Comp: TierCompareScreen, showNav: false },
-  { id: 'invite',         label: 'Invite friend', Comp: InviteFriendScreen, showNav: false },
+  { id: 'home',           label: 'Home',           Comp: HomeScreen,          showNav: true, active: 'home' },
+  { id: 'bookings',       label: 'Bookings',       Comp: BookingsScreen,      showNav: true, active: 'calendar' },
+  { id: 'filter',         label: 'Filter match',   Comp: FilterScreen,        showNav: false },
+  { id: 'messages-list',  label: 'Messages list',  Comp: MessagesListScreen,  showNav: true, active: 'message' },
+  { id: 'stylist',        label: 'Stylist',        Comp: StylistScreen,       showNav: false },
+  { id: 'chat',           label: 'Chat',           Comp: ChatScreen,          showNav: false },
+  { id: 'complete',       label: 'Complete',       Comp: CompleteScreen,      showNav: false },
+  { id: 'review',         label: 'Review',         Comp: ReviewScreen,        showNav: false },
+  { id: 'thank-you',      label: 'Thank you',      Comp: ThankYouScreen,      showNav: false },
+  { id: 'account',        label: 'Account',        Comp: AccountScreen,       showNav: true, active: 'user' },
+  { id: 'ipa-quiz',       label: 'IPA quiz',       Comp: IPAQuizScreen,       showNav: false },
+  { id: 'loyalty',        label: 'Collective',     Comp: LoyaltyScreen,       showNav: true, active: 'user' },
+  { id: 'tier-compare',   label: 'Tiers',          Comp: TierCompareScreen,   showNav: false },
+  { id: 'invite',         label: 'Invite friend',  Comp: InviteFriendScreen,  showNav: false },
   { id: 'points-history', label: 'Points history', Comp: PointsHistoryScreen, showNav: false },
 ];
 
@@ -72,7 +75,7 @@ function Phone({ screenId, state, set, mode = 'tour' }) {
         <div style={{ paddingTop: 56 }}>
           <Comp go={go} state={state} set={(p) => set({ ...state, ...p })}/>
         </div>
-        {s.showNav && <BottomNav active={s.active || 'home'} onChange={(k) => go(k === 'user' ? 'account' : k === 'message' ? 'messages-list' : k === 'calendar' ? 'home' : 'home')}/>}
+        {s.showNav && <BottomNav active={s.active || 'home'} onChange={(k) => go(k === 'user' ? 'account' : k === 'message' ? 'messages-list' : k === 'calendar' ? 'bookings' : 'home')}/>}
       </div>
     </IOSDevice>
   );
@@ -91,6 +94,9 @@ function App() {
 
   return (
     <div className="canvas">
+      <div style={{ maxWidth: 1200, margin: '0 auto', marginBottom: 16 }}>
+        <a href="../index.html" className="back-link">← All UI kits</a>
+      </div>
       <div className="header">
         <div>
           <div className="eyebrow">UI Kit · Customer mobile</div>
