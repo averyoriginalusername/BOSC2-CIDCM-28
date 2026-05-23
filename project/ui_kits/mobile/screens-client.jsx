@@ -102,6 +102,10 @@ const ProfileSetupScreen = ({ go }) => (
         <Input label="Location" placeholder="New York, USA" value="" onChange={()=>{}}/>
       </div>
       <Input label="Occupation" placeholder="Marketing executive" value="" onChange={()=>{}}/>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <Input label="Gender" placeholder="Female (she/her)" value="" onChange={()=>{}}/>
+        <Input label="Hair color" placeholder="Brown" value="" onChange={()=>{}}/>
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
         <Input label="Height" placeholder="160 cm" value="" onChange={()=>{}}/>

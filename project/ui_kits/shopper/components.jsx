@@ -38,6 +38,8 @@ const Icon = ({ name, size = 18, stroke = '#1A1410', strokeWidth = 1.6, fill = '
     filter: <path d="M3 4h18l-7 9v6l-4 2v-8z"/>,
     pin: <><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></>,
     star: <path d="M12 2l3 7 7 .5-5.5 4.5L18 22l-6-4-6 4 1.5-8L2 9.5 9 9z" fill={stroke}/>,
+    starOutline: <path d="M12 2l3 7 7 .5-5.5 4.5L18 22l-6-4-6 4 1.5-8L2 9.5 9 9z"/>,
+    bookmark: <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>,
     check: <path d="M20 6 9 17l-5-5"/>,
     checkCircle: <><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></>,
     circle: <circle cx="12" cy="12" r="8"/>,

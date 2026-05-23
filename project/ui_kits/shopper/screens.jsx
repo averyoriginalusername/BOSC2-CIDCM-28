@@ -16,10 +16,11 @@ const CreationScreen = () => {
     { name: 'Amelia Park',     evt: 'Gala styling',      date: 'Apr 22', img: '../../assets/photos/model-selfie-blazer.png' },
     { name: 'Sienna Lowe',     evt: 'Wardrobe refresh',  date: 'May 02', img: '../../assets/photos/pearl-necklace.jpeg' },
   ];
+  const stars = 3; // rating out of 5 — matches wireframe (3 filled)
   return (
-    <div style={{ padding: 28, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+    <div style={{ padding: 28 }}>
       {/* Welcome */}
-      <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 20 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>TUESDAY · MAY 21</div>
           <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 32, color: '#1A1410', letterSpacing: '-0.01em', marginTop: 4, lineHeight: 1.05, whiteSpace: 'nowrap' }}>Good morning, Sophia</h1>
@@ -31,104 +32,140 @@ const CreationScreen = () => {
         </div>
       </div>
 
-      {/* Stats row */}
-      <Stat label="Active clients" value="12" delta="2 this week" deltaPositive/>
-      <Stat label="Sessions booked" value="34" delta="8% vs last mo" deltaPositive/>
-      <Stat label="Earnings · MTD" value="$3,240" delta="12%" deltaPositive/>
+      {/* Main 3-column layout — left rail / map / to-do (matches wireframe) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr 280px', gap: 16, alignItems: 'start' }}>
 
-      {/* Map + clients (left) */}
-      <Card style={{ gridColumn: '1 / span 2', padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px 0' }}>
-          <SectionTitle eyebrow="DISTRIBUTION" action={<Button variant="ghost" size="sm">Open map</Button>}>Shops near your clients</SectionTitle>
-        </div>
-        <div style={{ position: 'relative', height: 260, background: 'linear-gradient(135deg, #F2EEE6 0%, #E8E2D6 60%, #DCD5CB 100%)' }}>
-          {/* faux map grid */}
-          <svg viewBox="0 0 600 260" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.5 }}>
-            {Array.from({length: 12}).map((_, i) => <line key={`v${i}`} x1={i*50} y1="0" x2={i*50} y2="260" stroke="#fff" strokeWidth="1.5"/>)}
-            {Array.from({length: 6}).map((_, i) => <line key={`h${i}`} x1="0" y1={i*45} x2="600" y2={i*45} stroke="#fff" strokeWidth="1.5"/>)}
-            <path d="M0 130 Q 150 60 300 120 T 600 100" stroke="#C7BFB5" strokeWidth="6" fill="none"/>
-            <path d="M180 0 Q 200 100 240 140 T 280 260" stroke="#C7BFB5" strokeWidth="6" fill="none"/>
-          </svg>
-          {/* Pins */}
-          {[
-            { l: '32%', t: '40%', label: 'Bergdorf' },
-            { l: '54%', t: '60%', label: 'Bloomingdale\'s' },
-            { l: '72%', t: '32%', label: 'The Webster' },
-            { l: '20%', t: '70%', label: 'Saks' },
-          ].map((p, i) => (
-            <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, transform: 'translate(-50%, -100%)' }}>
-              <div style={{ width: 28, height: 28, borderRadius: '50% 50% 50% 0', background: '#EE5A5A', transform: 'rotate(-45deg)', display: 'grid', placeItems: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
-                <div style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%', transform: 'rotate(45deg)' }}/>
-              </div>
-              <div style={{ background: '#fff', padding: '4px 8px', borderRadius: 8, fontSize: 10.5, fontWeight: 600, color: '#1A1410', marginTop: 4, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', whiteSpace: 'nowrap' }}>{p.label}</div>
+        {/* LEFT RAIL — rating, phone preview (match graph), app statistics, AI assistant */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+          {/* Rating */}
+          <Card>
+            <SectionTitle eyebrow="YOUR RATING">Client satisfaction</SectionTitle>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              {[1,2,3,4,5].map(i => (
+                <Icon key={i} name={i <= stars ? 'star' : 'starOutline'} size={26} stroke={i <= stars ? '#1A1410' : '#C7BFB5'} strokeWidth={1.4}/>
+              ))}
+              <span style={{ marginLeft: 6, fontFamily: "'JetBrains Mono',monospace", fontSize: 15, color: '#1A1410', fontWeight: 500 }}>3.0</span>
             </div>
-          ))}
-        </div>
-      </Card>
+            <p style={{ fontSize: 11.5, color: '#8C8278', marginTop: 8, lineHeight: 1.4 }}>Across 212 reviews · trending up this month.</p>
+          </Card>
 
-      {/* To-do list (right) */}
-      <Card>
-        <SectionTitle eyebrow="PROJECT" action={<Icon name="moreHoriz" size={18} stroke="#8C8278"/>}>To-do list</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {todos.map((t, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 18, height: 18, borderRadius: '50%', border: t.done ? '0' : '1.5px solid #DCD5CB', background: t.done ? '#6B5BD3' : 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                {t.done && <Icon name="check" size={11} stroke="#fff" strokeWidth={3}/>}
-              </div>
-              <span style={{ fontSize: 13, color: t.done ? '#8C8278' : '#1A1410', textDecoration: t.done ? 'line-through' : 'none' }}>{t.l}</span>
+          {/* Phone preview — match network graph + 3|6 stat */}
+          <Card style={{ padding: 0, overflow: 'hidden' }}>
+            <div style={{ padding: '16px 18px 0' }}>
+              <SectionTitle eyebrow="LIVE MATCHES">Your app preview</SectionTitle>
             </div>
-          ))}
-        </div>
-        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #ECE7E0' }}>
-          <button style={{ background: 'transparent', border: 0, color: '#6B5BD3', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Icon name="plus" size={14} stroke="#6B5BD3" strokeWidth={2}/> Add a task
-          </button>
-        </div>
-      </Card>
-
-      {/* Upcoming clients */}
-      <Card style={{ gridColumn: '1 / span 2' }}>
-        <SectionTitle eyebrow="UPCOMING SESSIONS" action={<Button variant="ghost" size="sm">View all</Button>}>Your client schedule</SectionTitle>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-          {clients.map(c => (
-            <div key={c.name} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: 10, border: '1px solid #ECE7E0', borderRadius: 14 }}>
-              <div style={{ width: 56, height: 72, borderRadius: 10, background: `url(${c.img}) center/cover`, flexShrink: 0 }}/>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13.5, color: '#1A1410' }}>{c.name}</div>
-                <div style={{ fontSize: 11.5, color: '#8C8278', marginTop: 2 }}>{c.evt}</div>
-                <div style={{ fontSize: 11, color: '#6B5BD3', marginTop: 4, fontWeight: 600, letterSpacing: '0.04em' }}>{c.date}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '0 18px 18px' }}>
+              <div style={{ width: 150, height: 230, borderRadius: 22, border: '6px solid #1A1410', background: '#FAF7F2', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 6, left: '50%', transform: 'translateX(-50%)', width: 40, height: 4, borderRadius: 999, background: '#1A1410' }}/>
+                {/* match network graph */}
+                <svg viewBox="0 0 150 230" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+                  <path d="M40 60 Q 75 90 110 70 M40 60 Q 60 120 95 140 M110 70 Q 90 130 95 140 M95 140 Q 60 160 50 190 M110 70 Q 130 130 105 185" stroke="#4B8B5A" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                  {[[40,60],[110,70],[95,140],[50,190],[105,185],[70,110]].map(([x,y], i) => (
+                    <circle key={i} cx={x} cy={y} r="6" fill="#4B8B5A"/>
+                  ))}
+                </svg>
+                {/* 3 | 6 stat badge */}
+                <div style={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 8, background: '#fff', borderRadius: 999, padding: '6px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 600, color: '#4B8B5A' }}>3</span>
+                  <span style={{ fontSize: 11, color: '#C7BFB5' }}>|</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 600, color: '#1A1410' }}>6</span>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      </Card>
+          </Card>
 
-      {/* AI assistant prompt */}
-      <Card style={{ background: 'linear-gradient(180deg, #F4F1FF 0%, #fff 60%)', borderColor: '#CDC0FF' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: '#fff', display: 'grid', placeItems: 'center', border: '1px solid #CDC0FF' }}>
-            <Icon name="sparkle" size={18} stroke="#6B5BD3" strokeWidth={1.6}/>
+          {/* App statistics */}
+          <Card>
+            <SectionTitle eyebrow="APP STATISTICS">This week</SectionTitle>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 70, marginBottom: 10 }}>
+              {[10, 14, 9, 18, 22, 16, 24].map((v, i) => (
+                <div key={i} style={{ flex: 1, height: `${(v/24)*100}%`, background: i === 6 ? '#6B5BD3' : '#CDC0FF', borderRadius: '3px 3px 0 0' }}/>
+              ))}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {[['Profile views', '1.2k'], ['Response rate', '98%'], ['Hours online', '34h'], ['Avg reply', '12m']].map(s => (
+                <div key={s[0]}>
+                  <div style={{ fontSize: 9.5, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>{s[0]}</div>
+                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 600, color: '#1A1410', marginTop: 1 }}>{s[1]}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* AI assistant */}
+          <Card style={{ background: 'linear-gradient(180deg, #F4F1FF 0%, #fff 60%)', borderColor: '#CDC0FF' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: '#fff', display: 'grid', placeItems: 'center', border: '1px solid #CDC0FF', flexShrink: 0 }}>
+                <Icon name="sparkle" size={16} stroke="#6B5BD3" strokeWidth={1.6}/>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1410' }}>AI assistant</div>
+                <div style={{ fontSize: 11.5, color: '#8C8278', marginTop: 2, lineHeight: 1.4 }}>Drafted a 5-item shortlist for Olivia's wedding look from Bergdorf + Saks.</div>
+                <button style={{ background: 'transparent', border: 0, color: '#6B5BD3', fontSize: 11.5, fontWeight: 600, padding: 0, marginTop: 8, cursor: 'pointer' }}>Review shortlist →</button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* CENTER — shops map */}
+        <Card style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ padding: '16px 20px 0' }}>
+            <SectionTitle eyebrow="DISTRIBUTION" action={<Button variant="ghost" size="sm">Open map</Button>}>Shops near your clients</SectionTitle>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13.5, color: '#1A1410' }}>AI assistant</div>
-            <div style={{ fontSize: 12, color: '#8C8278', marginTop: 2, lineHeight: 1.4 }}>"Olivia mentioned she wants a long-train princess look. I drafted a 5-item shortlist from Bergdorf and Saks. Review?"</div>
-            <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-              <Button variant="primary" size="sm">Review shortlist</Button>
-              <Button variant="ghost" size="sm">Dismiss</Button>
-            </div>
+          <div style={{ position: 'relative', height: 460, background: 'linear-gradient(135deg, #F2EEE6 0%, #E8E2D6 60%, #DCD5CB 100%)' }}>
+            <svg viewBox="0 0 600 460" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.5 }}>
+              {Array.from({length: 12}).map((_, i) => <line key={`v${i}`} x1={i*50} y1="0" x2={i*50} y2="460" stroke="#fff" strokeWidth="1.5"/>)}
+              {Array.from({length: 10}).map((_, i) => <line key={`h${i}`} x1="0" y1={i*46} x2="600" y2={i*46} stroke="#fff" strokeWidth="1.5"/>)}
+              <path d="M0 230 Q 150 120 300 210 T 600 180" stroke="#C7BFB5" strokeWidth="6" fill="none"/>
+              <path d="M180 0 Q 200 180 240 250 T 280 460" stroke="#C7BFB5" strokeWidth="6" fill="none"/>
+            </svg>
+            {[
+              { l: '32%', t: '32%', label: 'Bergdorf' },
+              { l: '58%', t: '54%', label: 'Bloomingdale\'s' },
+              { l: '72%', t: '28%', label: 'The Webster' },
+              { l: '22%', t: '68%', label: 'Saks' },
+            ].map((p, i) => (
+              <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, transform: 'translate(-50%, -100%)' }}>
+                <div style={{ width: 30, height: 30, borderRadius: '50% 50% 50% 0', background: '#EE5A5A', transform: 'rotate(-45deg)', display: 'grid', placeItems: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
+                  <div style={{ width: 11, height: 11, background: '#fff', borderRadius: '50%', transform: 'rotate(45deg)' }}/>
+                </div>
+                <div style={{ background: '#fff', padding: '4px 8px', borderRadius: 8, fontSize: 10.5, fontWeight: 600, color: '#1A1410', marginTop: 4, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', whiteSpace: 'nowrap' }}>{p.label}</div>
+              </div>
+            ))}
           </div>
-        </div>
-      </Card>
+        </Card>
 
-      {/* Shops spreadsheet */}
-      <Card style={{ gridColumn: '1 / -1', padding: 0 }}>
+        {/* RIGHT — To-do list */}
+        <Card>
+          <SectionTitle eyebrow="PROJECT" action={<Icon name="moreHoriz" size={18} stroke="#8C8278"/>}>To do list</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {todos.map((t, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 18, height: 18, borderRadius: '50%', border: '1.5px solid ' + (t.done ? '#6B5BD3' : '#DCD5CB'), background: 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                  {t.done && <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#6B5BD3' }}/>}
+                </div>
+                <span style={{ fontSize: 13, color: t.done ? '#1A1410' : '#4A413B', fontWeight: t.done ? 600 : 400 }}>{t.l}{t.l === 'Celebrate' ? ' 🎉' : ''}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #ECE7E0' }}>
+            <button style={{ background: 'transparent', border: 0, color: '#6B5BD3', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Icon name="plus" size={14} stroke="#6B5BD3" strokeWidth={2}/> Add a task
+            </button>
+          </div>
+        </Card>
+      </div>
+
+      {/* Shops spreadsheet (full width, bottom) */}
+      <Card style={{ marginTop: 16, padding: 0 }}>
         <div style={{ padding: '16px 20px 0' }}>
-          <SectionTitle eyebrow="SHOPS DIRECTORY" action={<Button variant="ghost" size="sm" leftIcon="plus">Add shop</Button>}>Sourcing partners</SectionTitle>
+          <SectionTitle eyebrow="SHOPS SPREADSHEET" action={<Button variant="ghost" size="sm" leftIcon="plus">Add shop</Button>}>Sourcing partners</SectionTitle>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderTop: '1px solid #ECE7E0', background: '#FAF7F2' }}>
-              {['Shop', 'Budget range', 'Style type', 'Contact salesperson', 'Last sourced'].map((h, i) => (
+              {['Shops spreadsheet', 'Budget range', 'Style type', 'Contact salesperson', 'Last sourced'].map((h, i) => (
                 <th key={h} style={{ textAlign: 'left', padding: '10px 20px', fontFamily: "'Outfit',sans-serif", fontSize: 10.5, fontWeight: 600, color: '#8C8278', letterSpacing: '0.14em', textTransform: 'uppercase', borderBottom: '1px solid #ECE7E0', width: i === 0 ? '24%' : 'auto' }}>{h}</th>
               ))}
             </tr>
@@ -163,93 +200,89 @@ const CreationScreen = () => {
 
 // ============ PAYMENTS ============
 const PaymentsScreen = () => {
-  const months = [
-    { m: 'Jan', a: 32, b: 18 },
-    { m: 'Feb', a: 28, b: 14 },
-    { m: 'Mar', a: 44, b: 26 },
-    { m: 'Apr', a: 38, b: 22 },
-    { m: 'May', a: 56, b: 34 },
-  ];
-  const max = 60;
+  const [range, setRange] = React.useState('Current Month');
+  const chartData = {
+    'Current Month': [12, 28, 18, 34, 22, 40, 30],
+    '3 Months': [44, 28, 56],
+    'Year': [32, 28, 44, 38, 56, 48, 40, 52, 46, 58, 50, 62],
+  };
+  const bars = chartData[range];
+  const max = Math.max(...bars);
   const clients = [
-    { id: 'Olivia M.', status: 'Paid', pct: 100, amt: '$320' },
-    { id: 'Amelia P.', status: 'Pending', pct: 60, amt: '$180' },
-    { id: 'Sienna L.', status: 'Paid', pct: 100, amt: '$420' },
-    { id: 'Hannah Y.', status: 'Pending', pct: 40, amt: '$240' },
-    { id: 'Maya R.',   status: 'Paid', pct: 100, amt: '$160' },
-    { id: 'Cora T.',   status: 'Draft', pct: 0,   amt: '$—' },
+    { n: 'Client 1', amt: '$320', pct: 100, status: 'Paid',    paid: true },
+    { n: 'Client 2', amt: '$180', pct: 55,  status: 'Pending' },
+    { n: 'Client 3', amt: '$420', pct: 100, status: 'Paid',    paid: true },
+    { n: 'Client 4', amt: '$240', pct: 70,  status: 'Pending' },
+    { n: 'Client 5', amt: '$160', pct: 35,  status: 'Pending' },
+    { n: 'Client 6', amt: '$300', pct: 50,  status: 'Pending' },
   ];
   return (
-    <div style={{ padding: 28, display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
-      <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+    <div style={{ padding: 28 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>FINANCE TRACKER</div>
           <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 34, color: '#1A1410', letterSpacing: '-0.01em', marginTop: 4 }}>Your earnings</h1>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {['Current month', '3 months', 'Year'].map((p, i) => (
-            <button key={p} style={{ padding: '8px 14px', borderRadius: 999, border: '1px solid', borderColor: i === 1 ? '#1A1410' : '#DCD5CB', background: i === 1 ? '#1A1410' : '#fff', color: i === 1 ? '#fff' : '#1A1410', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 500, cursor: 'pointer' }}>{p}</button>
-          ))}
-        </div>
+        <Button variant="ghost" size="sm" leftIcon="arrowDown">Export</Button>
       </div>
 
-      {/* Earnings stats */}
-      <Card style={{ gridColumn: '1 / -1', padding: 0 }}>
-        <div style={{ padding: '18px 22px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 22 }}>
-          {[
-            { l: 'Earned · 3mo', v: '$9,840', d: '+18%' },
-            { l: 'This month', v: '$3,240', d: '+12%' },
-            { l: 'Pending payout', v: '$640', d: '4 invoices' },
-            { l: 'Avg session', v: '$152', d: '+4%' },
-          ].map((s, i) => (
-            <div key={s.l} style={{ borderLeft: i ? '1px solid #ECE7E0' : 'none', paddingLeft: i ? 22 : 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>{s.l}</div>
-              <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 500, color: '#1A1410', marginTop: 6, letterSpacing: '-0.01em' }}>{s.v}</div>
-              <div style={{ fontSize: 11.5, color: '#4B8B5A', marginTop: 2 }}>{s.d}</div>
-            </div>
-          ))}
-        </div>
-      </Card>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 16, alignItems: 'start' }}>
 
-      {/* Chart */}
-      <Card>
-        <SectionTitle eyebrow="REVENUE" action={<span style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11.5, color: '#8C8278' }}><span style={{display:'inline-flex', alignItems:'center', gap:4}}><span style={{width:8,height:8,background:'#6B5BD3',borderRadius:2}}/>Sessions</span><span style={{display:'inline-flex', alignItems:'center', gap:4}}><span style={{width:8,height:8,background:'#CDC0FF',borderRadius:2}}/>Tips</span></span>}>Last 5 months</SectionTitle>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 24, height: 200, padding: '8px 0 12px', borderBottom: '1px solid #ECE7E0' }}>
-          {months.map(m => (
-            <div key={m.m} style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 5, height: '100%' }}>
-              <div style={{ width: 24, height: `${(m.a/max)*100}%`, background: '#6B5BD3', borderRadius: '6px 6px 0 0' }}/>
-              <div style={{ width: 24, height: `${(m.b/max)*100}%`, background: '#CDC0FF', borderRadius: '6px 6px 0 0' }}/>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 24, marginTop: 8 }}>
-          {months.map(m => <div key={m.m} style={{ flex: 1, fontSize: 11, color: '#8C8278', textAlign: 'center' }}>{m.m}</div>)}
-        </div>
-      </Card>
-
-      {/* Client payment progress */}
-      <Card>
-        <SectionTitle eyebrow="CLIENT PAYMENT PROGRESS" action={<Button variant="ghost" size="sm">Export</Button>}>Open invoices</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {clients.map(c => (
-            <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: '1px solid #ECE7E0' }}>
-              <Avatar initials={c.id.split(' ').map(x=>x[0]).join('')} size={32}/>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1A1410' }}>{c.id}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 12.5, fontWeight: 500, color: '#1A1410' }}>{c.amt}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                  <div style={{ flex: 1, height: 4, background: '#F2EEE6', borderRadius: 999 }}>
-                    <div style={{ width: `${c.pct}%`, height: '100%', background: c.status === 'Paid' ? '#4B8B5A' : c.status === 'Pending' ? '#D89A3E' : '#C7BFB5', borderRadius: 999 }}/>
-                  </div>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: c.status === 'Paid' ? '#4B8B5A' : c.status === 'Pending' ? '#D89A3E' : '#8C8278', letterSpacing: '0.04em' }}>{c.status}</span>
-                </div>
+        {/* LEFT — Finance tracker chart */}
+        <Card>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
+            {['Current Month', '3 Months', 'Year'].map(p => (
+              <button key={p} onClick={() => setRange(p)} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid', borderColor: range === p ? '#1A1410' : '#DCD5CB', background: range === p ? '#1A1410' : '#fff', color: range === p ? '#fff' : '#1A1410', fontFamily: "'Outfit',sans-serif", fontSize: 12.5, fontWeight: 500, cursor: 'pointer' }}>{p}</button>
+            ))}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 240, padding: '8px 0 12px', borderBottom: '1px solid #ECE7E0' }}>
+            {bars.map((v, i) => {
+              const shade = ['#1A4D2E', '#2E7D46', '#4B8B5A', '#7FB069'][i % 4];
+              return <div key={i} style={{ flex: 1, height: `${(v/max)*100}%`, background: shade, borderRadius: '5px 5px 0 0' }}/>;
+            })}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
+            {[['Earned', '$9,840'], ['Pending', '$640'], ['Avg session', '$152']].map(s => (
+              <div key={s[0]}>
+                <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>{s[0]}</div>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 600, color: '#1A1410', marginTop: 2 }}>{s[1]}</div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </Card>
+
+        {/* RIGHT — Client payment progress (6 cards) */}
+        <div>
+          <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600, marginBottom: 12 }}>CLIENT PAYMENT PROGRESS</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            {clients.map(c => (
+              <Card key={c.n} padded={false} style={{ overflow: 'hidden' }}>
+                <div style={{ background: '#F2EEE6', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #ECE7E0' }}>
+                  <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 600, color: '#1A1410' }}>{c.n}</span>
+                  {c.paid && (
+                    <span style={{ width: 18, height: 18, borderRadius: 4, border: '1.5px solid #4B8B5A', display: 'grid', placeItems: 'center' }}>
+                      <Icon name="check" size={11} stroke="#4B8B5A" strokeWidth={3}/>
+                    </span>
+                  )}
+                </div>
+                <div style={{ padding: 14 }}>
+                  <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+                    <div style={{ width: 36, height: 6, background: '#ECE7E0', borderRadius: 999 }}/>
+                    <div style={{ width: 24, height: 6, background: '#ECE7E0', borderRadius: 999 }}/>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 600, color: '#1A1410' }}>{c.amt}</span>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: c.status === 'Paid' ? '#4B8B5A' : '#D89A3E', letterSpacing: '0.04em' }}>{c.status}</span>
+                  </div>
+                  <div style={{ height: 8, background: '#F2EEE6', borderRadius: 999, border: '1px solid #ECE7E0' }}>
+                    <div style={{ width: `${c.pct}%`, height: '100%', background: c.paid ? '#1A1410' : '#C7BFB5', borderRadius: 999 }}/>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
@@ -771,9 +804,10 @@ const AccountScreen = () => {
     { l: 'Display mode',         icon: 'eye' },
     { l: 'Ongoing orders',       icon: 'fileText' },
     { l: 'My clients',           icon: 'users' },
+    { l: 'Saved shops',          icon: 'bookmark' },
     { l: 'My style portfolio',   icon: 'image' },
-    { l: 'Finance tracker',      icon: 'wallet' },
     { l: 'SOURCED Collective',   icon: 'sparkle', accent: true },
+    { l: 'Finance tracker',      icon: 'wallet' },
   ];
   return (
     <div style={{ padding: 28, display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 16 }}>
