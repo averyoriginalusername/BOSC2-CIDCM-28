@@ -197,14 +197,47 @@ const ProfileDetailScreen = ({ go }) => (
 );
 
 // ---------- 4b. MESSAGES LIST (Search Stylist) ----------
-const MessagesListScreen = ({ go }) => {
-  const stylists = [
-    { n: 'Sophia',  spec: 'Wedding Stylist',    new: 1 },
-    { n: 'Mandy',   spec: 'Cottage Core Stylist', new: 0 },
-    { n: 'Martha',  spec: 'Boho Chic Stylist',  new: 0 },
-    { n: 'Jerry',   spec: 'Cyber punk Stylist', new: 0 },
-    { n: 'Sam',     spec: 'Y2K Stylist',        new: 2 },
-  ];
+// Stylist directory + per-conversation default threads (reset each time a chat opens)
+const CLIENT_STYLISTS = {
+  'Sophia': { full: 'Sophia Laurent', spec: 'Wedding Stylist',     initials: 'SL', new: 1 },
+  'Mandy':  { full: 'Mandy Chen',     spec: 'Cottage Core Stylist', initials: 'MC', new: 0 },
+  'Martha': { full: 'Martha Reyes',   spec: 'Boho Chic Stylist',    initials: 'MR', new: 0 },
+  'Jerry':  { full: 'Jerry Okafor',   spec: 'Cyber punk Stylist',   initials: 'JO', new: 0 },
+  'Sam':    { full: 'Sam Lee',        spec: 'Y2K Stylist',          initials: 'SA', new: 2 },
+};
+
+const CLIENT_THREADS = {
+  'Sophia': [
+    { side: 'out', text: 'Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!' },
+    { side: 'in',  text: 'HI! Yes that sounds great as I am currently available. What look are you going for?' },
+    { side: 'out', text: 'Perfect! I was hoping for a princess look with a long train and preferably white.' },
+    { side: 'in',  text: 'I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?' },
+  ],
+  'Mandy': [
+    { side: 'in', text: 'Hi! I saw you love cottage core — what occasion are we dressing for?' },
+  ],
+  'Martha': [
+    { side: 'in', text: "Hey! I'm all about boho chic. Tell me about the festival you mentioned." },
+  ],
+  'Jerry': [
+    { side: 'in', text: 'Yo! Cyber punk is my world. Got a vibe board in mind?' },
+  ],
+  'Sam': [
+    { side: 'out', text: 'Hi Sam! I want a Y2K look for a party next week.' },
+    { side: 'in',  text: 'Love that. Low-rise, baby tee, the works? I can pull some options today.' },
+  ],
+};
+
+const CLIENT_REPLIES = {
+  'Sophia': "Love it — I'll pull a few princess silhouettes and send them over shortly.",
+  'Mandy':  'Perfect, I have some prairie dresses that would suit you beautifully.',
+  'Martha': 'Amazing — I’ll put together a flowy, earthy edit for you.',
+  'Jerry':  'Say less. Sending you some neon layering ideas now.',
+  'Sam':    'On it! Expect a Y2K moodboard in your inbox soon.',
+};
+
+const MessagesListScreen = ({ go, set }) => {
+  const names = Object.keys(CLIENT_STYLISTS);
   return (
     <div style={{ background: '#fff', minHeight: '100%', padding: '0 0 120px' }}>
       <div style={{ padding: '8px 20px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -221,14 +254,17 @@ const MessagesListScreen = ({ go }) => {
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {stylists.map(s => (
-          <button key={s.n} onClick={() => go('chat')} style={{ background: 'transparent', border: 0, borderBottom: '1px solid #ECE7E0', padding: '16px 24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', textAlign: 'left' }}>
-            <div>
-              <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14.5, color: '#1A1410' }}>{s.n} — <span style={{ color: '#6B5BD3', fontWeight: 500 }}>{s.spec}</span></div>
-            </div>
-            {s.new > 0 && <span style={{ fontSize: 10.5, background: '#6B5BD3', color: '#fff', fontWeight: 700, padding: '2px 7px', borderRadius: 999 }}>{s.new}</span>}
-          </button>
-        ))}
+        {names.map(n => {
+          const s = CLIENT_STYLISTS[n];
+          return (
+            <button key={n} onClick={() => { set && set({ chatWith: n }); go('chat'); }} style={{ background: 'transparent', border: 0, borderBottom: '1px solid #ECE7E0', padding: '16px 24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', textAlign: 'left' }}>
+              <div>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14.5, color: '#1A1410' }}>{n} — <span style={{ color: '#6B5BD3', fontWeight: 500 }}>{s.spec}</span></div>
+              </div>
+              {s.new > 0 && <span style={{ fontSize: 10.5, background: '#6B5BD3', color: '#fff', fontWeight: 700, padding: '2px 7px', borderRadius: 999 }}>{s.new}</span>}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -392,7 +428,7 @@ const HomeScreen = ({ go }) => {
 };
 
 // ---------- 5. STYLIST PROFILE ----------
-const StylistScreen = ({ go }) => (
+const StylistScreen = ({ go, set }) => (
   <div style={{ background: '#FAF7F2', minHeight: '100%', paddingBottom: 130 }}>
     <div style={{ position: 'relative' }}>
       <div style={{ height: 280, background: 'url(../../assets/photos/model-blazer-coffee.png) center/cover' }}/>
@@ -414,7 +450,7 @@ const StylistScreen = ({ go }) => (
 
     <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{ display: 'flex', gap: 10 }}>
-        <Button variant="stylist" size="md" fullWidth onClick={() => go('chat')}>Message</Button>
+        <Button variant="lilac" size="md" fullWidth onClick={() => { set && set({ chatWith: 'Sophia' }); go('chat'); }}>Message</Button>
         <Button variant="outline" size="md" onClick={() => {}}>Book session</Button>
       </div>
 
@@ -468,48 +504,69 @@ const StylistScreen = ({ go }) => (
   </div>
 );
 
-// ---------- 6. CHAT ----------
-const ChatScreen = ({ go }) => (
-  <div style={{ background: '#FAF7F2', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-    <div style={{ background: '#fff', borderBottom: '1px solid #ECE7E0', padding: '8px 16px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-      <button onClick={() => go('stylist')} style={{ background: 'transparent', border: 0, cursor: 'pointer', padding: 4 }}>
-        <Icon name="back" size={22} stroke="#1A1410" strokeWidth={1.8}/>
-      </button>
-      <Avatar initials="SL" size={36}/>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 15, color: '#1A1410' }}>Sophia Laurent</div>
-        <div style={{ fontSize: 11, color: '#6B5BD3' }}>● Available now</div>
-      </div>
-      <Icon name="info" size={20} stroke="#8C8278"/>
-    </div>
+// ---------- 6. CHAT (live, per-stylist threads reset on open) ----------
+const ChatScreen = ({ go, state }) => {
+  const who = (state && state.chatWith) || 'Sophia';
+  const info = CLIENT_STYLISTS[who] || CLIENT_STYLISTS['Sophia'];
+  const [msgs, setMsgs] = React.useState(() => (CLIENT_THREADS[who] || []).slice());
+  const [draft, setDraft] = React.useState('');
+  const scrollRef = React.useRef(null);
 
-    <div style={{ flex: 1, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', paddingBottom: 100 }}>
-      <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', marginBottom: 6 }}>Today · 10:42 AM</div>
+  // Reset the conversation to this stylist's default thread whenever the stylist changes
+  React.useEffect(() => {
+    setMsgs((CLIENT_THREADS[who] || []).slice());
+    setDraft('');
+  }, [who]);
 
-      <ChatBubbleClient side="out">Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!</ChatBubbleClient>
-      <ChatBubbleClient side="in">HI! Yes that sounds great as I am currently available. What look are you going for?</ChatBubbleClient>
-      <ChatBubbleClient side="out">Perfect! I was hoping for a princess look with a long train and preferably white.</ChatBubbleClient>
-      <ChatBubbleClient side="in">I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?</ChatBubbleClient>
+  React.useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [msgs]);
 
-      <div style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 16, padding: 14, display: 'flex', gap: 12, alignItems: 'center', marginTop: 8 }}>
-        <Icon name="paperclip" size={22} stroke="#6B5BD3" strokeWidth={1.8}/>
+  const send = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setMsgs(m => [...m, { side: 'out', text }]);
+    setDraft('');
+    const reply = CLIENT_REPLIES[who];
+    if (reply) setTimeout(() => setMsgs(m => [...m, { side: 'in', text: reply }]), 700);
+  };
+
+  return (
+    <div style={{ background: '#FAF7F2', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ background: '#fff', borderBottom: '1px solid #ECE7E0', padding: '8px 16px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <button onClick={() => go('messages-list')} style={{ background: 'transparent', border: 0, cursor: 'pointer', padding: 4 }}>
+          <Icon name="back" size={22} stroke="#1A1410" strokeWidth={1.8}/>
+        </button>
+        <Avatar initials={info.initials} size={36}/>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1410' }}>Mood board attached</div>
-          <div style={{ fontSize: 11, color: '#8C8278' }}>princess-train.jpg · 2 of 4</div>
+          <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 15, color: '#1A1410' }}>{info.full}</div>
+          <div style={{ fontSize: 11, color: '#6B5BD3' }}>● Available now</div>
         </div>
-        <Icon name="forward" size={18} stroke="#8C8278"/>
+        <button onClick={() => go('complete')} style={{ background: '#F4F1FF', border: 0, cursor: 'pointer', borderRadius: 999, padding: '6px 12px', fontFamily: "'Outfit',sans-serif", fontSize: 11.5, fontWeight: 600, color: '#6B5BD3' }}>End session</button>
+      </div>
+
+      <div ref={scrollRef} style={{ flex: 1, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', paddingBottom: 100 }}>
+        <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', marginBottom: 6 }}>Today · 10:42 AM</div>
+        {msgs.map((m, i) => (
+          <ChatBubbleClient key={i} side={m.side}>{m.text}</ChatBubbleClient>
+        ))}
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 30, left: 16, right: 16, background: '#fff', border: '1px solid #ECE7E0', borderRadius: 999, padding: '8px 8px 8px 18px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 8px 20px rgba(26,20,16,0.06)' }}>
+        <Icon name="image" size={20} stroke="#8C8278"/>
+        <input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') send(); }}
+          placeholder={`Message ${who}…`}
+          style={{ flex: 1, border: 0, outline: 'none', fontFamily: "'Outfit',sans-serif", fontSize: 14, background: 'transparent' }}/>
+        <button onClick={send} style={{ background: '#6B5BD3', border: 0, width: 40, height: 40, borderRadius: '50%', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
+          <Icon name="send" size={18} stroke="#fff" strokeWidth={2}/>
+        </button>
       </div>
     </div>
-
-    <div style={{ position: 'absolute', bottom: 30, left: 16, right: 16, background: '#fff', border: '1px solid #ECE7E0', borderRadius: 999, padding: '8px 8px 8px 18px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 8px 20px rgba(26,20,16,0.06)' }}>
-      <Icon name="image" size={20} stroke="#8C8278"/>
-      <input placeholder="Message Sophia…" style={{ flex: 1, border: 0, outline: 'none', fontFamily: "'Outfit',sans-serif", fontSize: 14, background: 'transparent' }}/>
-      <button onClick={() => go('complete')} style={{ background: '#6B5BD3', border: 0, width: 40, height: 40, borderRadius: '50%', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
-        <Icon name="send" size={18} stroke="#fff" strokeWidth={2}/>
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 const ChatBubbleClient = ({ side, children }) => {
   const out = side === 'out';
@@ -1082,7 +1139,7 @@ const PointsHistoryScreen = ({ go }) => {
 };
 
 // ---------- BOOKINGS (calendar nav) ----------
-const BookingsScreen = ({ go }) => {
+const BookingsScreen = ({ go, set }) => {
   const [tab, setTab] = React.useState('upcoming');
   const upcoming = [
     { stylist: 'Sophia Laurent', type: 'Wedding styling', date: 'Jun 12 · 10:00 AM', where: 'Bergdorf · Studio 3', status: 'confirmed', img: '../../assets/photos/model-blazer-coffee.png' },
@@ -1132,7 +1189,7 @@ const BookingsScreen = ({ go }) => {
             </div>
             {tab === 'upcoming' && (
               <div style={{ borderTop: '1px solid #ECE7E0', display: 'flex', gap: 8, padding: '10px 14px' }}>
-                <Button variant="soft" size="sm" onClick={() => go('chat')}>Message</Button>
+                <Button variant="soft" size="sm" onClick={() => { set && set({ chatWith: b.stylist.split(' ')[0] }); go('chat'); }}>Message</Button>
                 <Button variant="ghost" size="sm" style={{ color: '#C24545' }}>Cancel</Button>
               </div>
             )}

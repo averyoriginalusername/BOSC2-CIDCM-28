@@ -521,29 +521,70 @@ const ClientsScreen = () => {
 };
 
 // ============ MESSAGES ============
+const DESK_THREADS = {
+  'Olivia Martinez': [
+    { side: 'in',  text: 'Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!' },
+    { side: 'out', text: 'HI! Yes that sounds great as I am currently available. What look are you going for?' },
+    { side: 'in',  text: 'Perfect! I was hoping for a princess look with a long train and preferably white.' },
+    { side: 'out', text: 'I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?' },
+  ],
+  'Amelia Park':  [ { side: 'in', text: 'Could we move the call to 3pm?' } ],
+  'Cora Tanaka':  [ { side: 'in', text: 'Hi! Just sent my mood board.' } ],
+  'Sienna Lowe':  [ { side: 'in', text: 'Thank you again — loved everything.' } ],
+  'Hannah Yates': [ { side: 'in', text: 'Looking forward to next week!' } ],
+};
+const DESK_REPLIES = {
+  'Olivia Martinez': 'Amazing — sending a princess-silhouette shortlist your way.',
+  'Amelia Park':     'No problem, 3pm works. See you then!',
+  'Cora Tanaka':     'Looking through it now — gorgeous palette.',
+  'Sienna Lowe':     'So glad! Let’s book the next session soon.',
+  'Hannah Yates':    'Me too — everything will be ready.',
+};
+
 const MessagesScreen = () => {
   const tabs = ['Inquiries', 'Messages', 'Contracts', 'Reviews'];
-  const threads = [
-    { name: 'Olivia Martinez', last: 'Perfect! I was hoping for a princess look…', t: '10:42', un: 0, sel: true, img: '../../assets/photos/model-sunglasses.png' },
-    { name: 'Amelia Park',     last: 'Could we move the call to 3pm?',             t: '09:15', un: 2, sel: false, img: '../../assets/photos/model-selfie-blazer.png' },
-    { name: 'Cora Tanaka',     last: 'Hi! Just sent my mood board.',               t: 'Mon',   un: 1, sel: false, img: '../../assets/photos/pearl-necklace.jpeg' },
-    { name: 'Sienna Lowe',     last: 'Thank you again — loved everything.',        t: 'Mon',   un: 0, sel: false, img: '../../assets/photos/model-blazer-coffee.png' },
-    { name: 'Hannah Yates',    last: 'Looking forward to next week!',              t: 'Sun',   un: 0, sel: false, img: '../../assets/photos/model-sunglasses.png' },
+  const threadMeta = [
+    { name: 'Olivia Martinez', t: '10:42', un: 0, img: '../../assets/photos/model-sunglasses.png' },
+    { name: 'Amelia Park',     t: '09:15', un: 2, img: '../../assets/photos/model-selfie-blazer.png' },
+    { name: 'Cora Tanaka',     t: 'Mon',   un: 1, img: '../../assets/photos/pearl-necklace.jpeg' },
+    { name: 'Sienna Lowe',     t: 'Mon',   un: 0, img: '../../assets/photos/model-blazer-coffee.png' },
+    { name: 'Hannah Yates',    t: 'Sun',   un: 0, img: '../../assets/photos/model-sunglasses.png' },
   ];
+  const [activeTab, setActiveTab] = React.useState(1);
+  const [selected, setSelected] = React.useState('Olivia Martinez');
+  const [msgs, setMsgs] = React.useState(() => DESK_THREADS['Olivia Martinez'].slice());
+  const [draft, setDraft] = React.useState('');
+  const scrollRef = React.useRef(null);
+
+  // Reset to the selected client's default thread whenever the selection changes
+  React.useEffect(() => { setMsgs((DESK_THREADS[selected] || []).slice()); setDraft(''); }, [selected]);
+  React.useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [msgs]);
+
+  const send = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setMsgs(m => [...m, { side: 'out', text }]);
+    setDraft('');
+    const reply = DESK_REPLIES[selected];
+    if (reply) setTimeout(() => setMsgs(m => [...m, { side: 'in', text: reply }]), 700);
+  };
+
+  const threads = threadMeta.map(t => ({ ...t, last: (DESK_THREADS[t.name][DESK_THREADS[t.name].length - 1] || {}).text || '', sel: t.name === selected }));
+  const selImg = (threadMeta.find(t => t.name === selected) || {}).img;
   return (
     <div style={{ padding: 0, display: 'grid', gridTemplateColumns: '160px 320px 1fr', height: 'calc(100% - 0px)', borderTop: '1px solid #ECE7E0' }}>
       {/* Sub-tabs rail */}
       <div style={{ borderRight: '1px solid #ECE7E0', background: '#FAF7F2', padding: '20px 0' }}>
         {tabs.map((t, i) => (
-          <button key={t} style={{
+          <button key={t} onClick={() => setActiveTab(i)} style={{
             display: 'flex', alignItems: 'center', gap: 10,
             width: '100%', padding: '12px 20px',
-            background: i === 1 ? '#fff' : 'transparent', borderLeft: i === 1 ? '3px solid #6B5BD3' : '3px solid transparent',
-            border: 0, borderBottom: 0, color: i === 1 ? '#1A1410' : '#8C8278',
-            fontFamily: "'Outfit',sans-serif", fontSize: 13.5, fontWeight: i === 1 ? 600 : 500,
+            background: i === activeTab ? '#fff' : 'transparent', borderLeft: i === activeTab ? '3px solid #6B5BD3' : '3px solid transparent',
+            border: 0, borderBottom: 0, color: i === activeTab ? '#1A1410' : '#8C8278',
+            fontFamily: "'Outfit',sans-serif", fontSize: 13.5, fontWeight: i === activeTab ? 600 : 500,
             cursor: 'pointer', textAlign: 'left',
           }}>
-            <Icon name={['inbox','message','fileText','star'][i]} size={16} stroke={i === 1 ? '#1A1410' : '#8C8278'}/>
+            <Icon name={['inbox','message','fileText','star'][i]} size={16} stroke={i === activeTab ? '#1A1410' : '#8C8278'}/>
             {t}
           </button>
         ))}
@@ -556,7 +597,7 @@ const MessagesScreen = () => {
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {threads.map(t => (
-            <div key={t.name} style={{ padding: '14px 16px', borderBottom: '1px solid #ECE7E0', background: t.sel ? '#F4F1FF' : '#fff', cursor: 'pointer', display: 'flex', gap: 10 }}>
+            <div key={t.name} onClick={() => setSelected(t.name)} style={{ padding: '14px 16px', borderBottom: '1px solid #ECE7E0', background: t.sel ? '#F4F1FF' : '#fff', cursor: 'pointer', display: 'flex', gap: 10 }}>
               <Avatar src={t.img} size={40}/>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -576,37 +617,27 @@ const MessagesScreen = () => {
       {/* Chat view */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#FAF7F2' }}>
         <div style={{ padding: '14px 22px', borderBottom: '1px solid #ECE7E0', background: '#fff', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Avatar src="../../assets/photos/model-sunglasses.png" size={40}/>
+          <Avatar src={selImg} size={40}/>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410' }}>Olivia Martinez</div>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410' }}>{selected}</div>
             <div style={{ fontSize: 11, color: '#6B5BD3' }}>● Active now</div>
           </div>
           <Button variant="outline" size="sm">View profile</Button>
           <Button variant="primary" size="sm" leftIcon="fileText">Send contract</Button>
         </div>
 
-        <div style={{ flex: 1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto' }}>
+        <div ref={scrollRef} style={{ flex: 1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto' }}>
           <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', margin: '8px 0' }}>TUESDAY · 10:42 AM</div>
-
-          <ShopperBubble side="in">Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!</ShopperBubble>
-          <ShopperBubble side="out">HI! Yes that sounds great as I am currently available. What look are you going for?</ShopperBubble>
-          <ShopperBubble side="in">Perfect! I was hoping for a princess look with a long train and preferably white.</ShopperBubble>
-          <ShopperBubble side="out">I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?</ShopperBubble>
-
-          <div style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 14, padding: 14, display: 'flex', alignItems: 'center', gap: 12, alignSelf: 'flex-end', maxWidth: '70%' }}>
-            <Icon name="image" size={20} stroke="#6B5BD3"/>
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: '#1A1410' }}>Mood board — sent</div>
-              <div style={{ fontSize: 11, color: '#8C8278' }}>4 references · Bergdorf + Saks</div>
-            </div>
-          </div>
+          {msgs.map((m, i) => (
+            <ShopperBubble key={i} side={m.side}>{m.text}</ShopperBubble>
+          ))}
         </div>
 
         <div style={{ padding: '14px 22px', borderTop: '1px solid #ECE7E0', background: '#fff', display: 'flex', alignItems: 'center', gap: 10 }}>
           <Icon name="paperclip" size={18} stroke="#8C8278"/>
           <Icon name="image" size={18} stroke="#8C8278"/>
-          <input placeholder="Type here…" style={{ flex: 1, border: '1px solid #ECE7E0', borderRadius: 999, padding: '10px 16px', fontFamily: "'Outfit',sans-serif", fontSize: 13.5, outline: 'none' }}/>
-          <button style={{ width: 38, height: 38, borderRadius: '50%', background: '#6B5BD3', border: 0, cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
+          <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') send(); }} placeholder="Type here…" style={{ flex: 1, border: '1px solid #ECE7E0', borderRadius: 999, padding: '10px 16px', fontFamily: "'Outfit',sans-serif", fontSize: 13.5, outline: 'none' }}/>
+          <button onClick={send} style={{ width: 38, height: 38, borderRadius: '50%', background: '#6B5BD3', border: 0, cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
             <Icon name="send" size={16} stroke="#fff" strokeWidth={2}/>
           </button>
         </div>

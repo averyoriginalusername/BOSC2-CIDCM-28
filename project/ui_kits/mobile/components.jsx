@@ -72,12 +72,14 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick, style, di
 
 const Input = ({ label, labelColor, type = 'text', value, onChange, placeholder, hint, style, role = 'client' }) => {
   const finalLabelColor = labelColor || ROLE_COLOR[role];
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
       {label && (
         <span style={{ fontSize: 13, fontWeight: 600, color: finalLabelColor }}>{label}</span>
       )}
-      <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+      <input type={type} value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }} placeholder={placeholder}
         style={{
           fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 15,
           padding: '13px 14px', border: '1.25px solid #DCD5CB',
@@ -89,35 +91,43 @@ const Input = ({ label, labelColor, type = 'text', value, onChange, placeholder,
   );
 };
 
-const Textarea = ({ label, value, onChange, placeholder, rows = 3, role = 'client', style }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
-    {label && <span style={{ fontSize: 13, fontWeight: 600, color: ROLE_COLOR[role] }}>{label}</span>}
-    <textarea value={value} onChange={onChange} placeholder={placeholder} rows={rows}
-      style={{ fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 14,
-        padding: '12px 14px', border: '1.25px solid #DCD5CB',
-        borderRadius: 12, background: '#fff', color: '#1A1410', outline: 'none',
-        width: '100%', boxSizing: 'border-box', resize: 'none', }}/>
-  </div>
-);
+const Textarea = ({ label, value, onChange, placeholder, rows = 3, role = 'client', style }) => {
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
+      {label && <span style={{ fontSize: 13, fontWeight: 600, color: ROLE_COLOR[role] }}>{label}</span>}
+      <textarea value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }} placeholder={placeholder} rows={rows}
+        style={{ fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 14,
+          padding: '12px 14px', border: '1.25px solid #DCD5CB',
+          borderRadius: 12, background: '#fff', color: '#1A1410', outline: 'none',
+          width: '100%', boxSizing: 'border-box', resize: 'none', }}/>
+    </div>
+  );
+};
 
-const Select = ({ label, value, onChange, options, role = 'client', style }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
-    {label && <span style={{ fontSize: 13, fontWeight: 600, color: ROLE_COLOR[role] }}>{label}</span>}
-    <select value={value} onChange={onChange}
-      style={{ fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 15,
-        padding: '13px 14px', border: '1.25px solid #DCD5CB',
-        borderRadius: 12, background: '#fff', color: value ? '#1A1410' : '#8C8278',
-        outline: 'none', width: '100%', boxSizing: 'border-box', appearance: 'none',
-        backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C8278' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>\")",
-        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
-        backgroundSize: '12px',
-        paddingRight: 36,
-      }}>
-      <option value="" disabled>Select…</option>
-      {options.map(o => <option key={o} value={o}>{o}</option>)}
-    </select>
-  </div>
-);
+const Select = ({ label, value, onChange, options, role = 'client', style }) => {
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
+      {label && <span style={{ fontSize: 13, fontWeight: 600, color: ROLE_COLOR[role] }}>{label}</span>}
+      <select value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }}
+        style={{ fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 15,
+          padding: '13px 14px', border: '1.25px solid #DCD5CB',
+          borderRadius: 12, background: '#fff', color: val ? '#1A1410' : '#8C8278',
+          outline: 'none', width: '100%', boxSizing: 'border-box', appearance: 'none',
+          backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C8278' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>\")",
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
+          backgroundSize: '12px',
+          paddingRight: 36,
+        }}>
+        <option value="" disabled>Select…</option>
+        {options.map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
+    </div>
+  );
+};
 
 const Chip = ({ children, active, onClick, variant = 'quiet', size = 'md' }) => {
   const colors = {

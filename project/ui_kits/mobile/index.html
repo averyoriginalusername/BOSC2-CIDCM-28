@@ -113,13 +113,13 @@ function Phone({ screenId, state, set, mode = 'flow' }) {
   const role = state.role || (s.role === 'stylist' ? 'stylist' : 'client');
   const go = (next) => {
     if (mode === 'tour') return;
-    set({ screen: next });
+    set(prev => ({ ...prev, screen: next }));
   };
   return (
     <IOSDevice width={390} height={780}>
       <div style={{ position: 'relative', minHeight: '100%' }}>
         <div style={{ paddingTop: 56 }}>
-          <Comp go={go} state={state} set={(p) => set({ ...state, ...p })}/>
+          <Comp go={go} state={state} set={(p) => set(prev => ({ ...prev, ...p }))}/>
         </div>
         {s.showNav && (
           <BottomNav

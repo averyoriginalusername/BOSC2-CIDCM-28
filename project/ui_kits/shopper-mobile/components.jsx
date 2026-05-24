@@ -55,17 +55,21 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick, style, di
   );
 };
 
-const Input = ({ label, type = 'text', value, onChange, placeholder, hint, leftIcon, style }) => (
+const Input = ({ label, type = 'text', value, onChange, placeholder, hint, leftIcon, style }) => {
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
+  return (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
     {label && <span style={{ fontSize: 13, fontWeight: 600, color: '#6B5BD3' }}>{label}</span>}
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '13px 14px', border: '1.25px solid #DCD5CB', borderRadius: 12, background: '#fff' }}>
       {leftIcon && <Icon name={leftIcon} size={16} stroke="#8C8278"/>}
-      <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+      <input type={type} value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }} placeholder={placeholder}
         style={{ flex: 1, fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 15, border: 0, outline: 'none', background: 'transparent', color: '#1A1410', minWidth: 0 }}/>
     </div>
     {hint && <span style={{ fontSize: 12, color: '#8C8278' }}>{hint}</span>}
   </div>
-);
+  );
+};
 
 const Chip = ({ children, active, onClick, variant = 'quiet', size = 'md' }) => {
   const colors = {

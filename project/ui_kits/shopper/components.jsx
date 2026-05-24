@@ -102,15 +102,19 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick, fullWidth
   );
 };
 
-const Input = ({ value, onChange, placeholder, label, leftIcon, size = 'md', style }) => (
+const Input = ({ value, onChange, placeholder, label, leftIcon, size = 'md', style }) => {
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
+  return (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, ...style }}>
     {label && <span style={{ fontSize: 12, fontWeight: 500, color: '#4A413B' }}>{label}</span>}
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fff', border: '1px solid #DCD5CB', borderRadius: size === 'lg' ? 999 : 10, padding: size === 'lg' ? '10px 16px' : '8px 12px' }}>
       {leftIcon && <Icon name={leftIcon} size={16} stroke="#8C8278"/>}
-      <input value={value} onChange={onChange} placeholder={placeholder} style={{ flex: 1, border: 0, outline: 'none', fontFamily: "'Outfit',sans-serif", fontSize: size === 'lg' ? 14 : 13, color: '#1A1410', background: 'transparent' }}/>
+      <input value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }} placeholder={placeholder} style={{ flex: 1, border: 0, outline: 'none', fontFamily: "'Outfit',sans-serif", fontSize: size === 'lg' ? 14 : 13, color: '#1A1410', background: 'transparent' }}/>
     </div>
   </div>
-);
+  );
+};
 
 const Card = ({ children, style, padded = true, hover }) => (
   <div style={{

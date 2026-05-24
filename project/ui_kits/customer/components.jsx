@@ -38,7 +38,10 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick, style, di
   );
 };
 
-const Input = ({ label, labelColor = 'coral', type = 'text', value, onChange, placeholder, hint, style }) => (
+const Input = ({ label, labelColor = 'coral', type = 'text', value, onChange, placeholder, hint, style }) => {
+  const [val, setVal] = React.useState(value || '');
+  React.useEffect(() => { setVal(value || ''); }, [value]);
+  return (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', ...style }}>
     {label && (
       <span style={{
@@ -46,7 +49,7 @@ const Input = ({ label, labelColor = 'coral', type = 'text', value, onChange, pl
         color: labelColor === 'coral' ? '#EE5A5A' : '#1A1410',
       }}>{label}</span>
     )}
-    <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+    <input type={type} value={val} onChange={(e) => { setVal(e.target.value); if (onChange) onChange(e); }} placeholder={placeholder}
       style={{
         fontFamily: "'Outfit', system-ui, sans-serif", fontSize: 15,
         padding: '13px 14px', border: '1.25px solid #DCD5CB',
@@ -55,7 +58,8 @@ const Input = ({ label, labelColor = 'coral', type = 'text', value, onChange, pl
       }} />
     {hint && <span style={{ fontSize: 12, color: '#8C8278' }}>{hint}</span>}
   </div>
-);
+  );
+};
 
 const Chip = ({ children, active, onClick, variant = 'quiet', size = 'md' }) => {
   const colors = {
