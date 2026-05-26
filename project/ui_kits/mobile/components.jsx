@@ -299,7 +299,41 @@ const ChatBubble = ({ from, children, role }) => {
   );
 };
 
+// Depop-style price offer card. side='in' (received → Counter / Buy now),
+// side='out' (sent by me → status note).
+const OfferCard = ({ side, price, was, expires = '299hr 47min', status, onCounter, onBuy }) => {
+  const received = side === 'in';
+  return (
+    <div style={{
+      alignSelf: received ? 'flex-start' : 'flex-end',
+      maxWidth: '84%', width: '84%',
+      background: '#F2EEE6', border: '1px solid #ECE7E0', borderRadius: 16,
+      padding: 14, marginBottom: 2,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+        <Icon name="tag" size={16} stroke="#4B8B5A" strokeWidth={1.8}/>
+        <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13, color: '#4B8B5A' }}>
+          {received ? 'Special offer received' : 'Offer sent'}
+        </span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+        <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 22, color: '#1A1410' }}>{price}</span>
+        {was && <span style={{ fontSize: 14, color: '#8C8278', textDecoration: 'line-through' }}>{was}</span>}
+      </div>
+      <div style={{ fontSize: 12, color: '#8C8278', marginTop: 4 }}>
+        {status ? status : `Expires in ${expires}`}
+      </div>
+      {received && !status && (
+        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+          <button onClick={onCounter} style={{ flex: 1, padding: '11px 0', borderRadius: 999, border: '1.5px solid #1A1410', background: '#fff', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410' }}>Counter</button>
+          <button onClick={onBuy} style={{ flex: 1, padding: '11px 0', borderRadius: 999, border: 0, background: '#1A1410', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#fff' }}>Buy now</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 Object.assign(window, {
-  Button, Input, Textarea, Select, Chip, Avatar, Icon, BottomNav, Logo, Wordmark, WordmarkCaps, ScreenHeader, ChatBubble,
+  Button, Input, Textarea, Select, Chip, Avatar, Icon, BottomNav, Logo, Wordmark, WordmarkCaps, ScreenHeader, ChatBubble, OfferCard,
   ROLE_COLOR, ROLE_SOFT, ROLE_INK, CLIENT_NAV, STYLIST_NAV,
 });

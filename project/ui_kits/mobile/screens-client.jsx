@@ -199,11 +199,11 @@ const ProfileDetailScreen = ({ go }) => (
 // ---------- 4b. MESSAGES LIST (Search Stylist) ----------
 // Stylist directory + per-conversation default threads (reset each time a chat opens)
 const CLIENT_STYLISTS = {
-  'Sophia': { full: 'Sophia Laurent', spec: 'Wedding Stylist',     initials: 'SL', new: 1 },
-  'Mandy':  { full: 'Mandy Chen',     spec: 'Cottage Core Stylist', initials: 'MC', new: 0 },
-  'Martha': { full: 'Martha Reyes',   spec: 'Boho Chic Stylist',    initials: 'MR', new: 0 },
-  'Jerry':  { full: 'Jerry Okafor',   spec: 'Cyber punk Stylist',   initials: 'JO', new: 0 },
-  'Sam':    { full: 'Sam Lee',        spec: 'Y2K Stylist',          initials: 'SA', new: 2 },
+  'Sophia': { full: 'Sophia Laurent', spec: 'Wedding Stylist',     initials: 'SL', new: 1, img: '../../assets/photos/model-blazer-coffee.png' },
+  'Mandy':  { full: 'Mandy Chen',     spec: 'Cottage Core Stylist', initials: 'MC', new: 0, img: '../../assets/photos/model-sunglasses.png' },
+  'Martha': { full: 'Martha Reyes',   spec: 'Boho Chic Stylist',    initials: 'MR', new: 0, img: '../../assets/photos/model-selfie-blazer.png' },
+  'Jerry':  { full: 'Jerry Okafor',   spec: 'Cyber punk Stylist',   initials: 'JO', new: 0, img: '../../assets/photos/model-selfie.png' },
+  'Sam':    { full: 'Sam Lee',        spec: 'Y2K Stylist',          initials: 'SA', new: 2, img: '../../assets/photos/pearl-necklace.jpeg' },
 };
 
 const CLIENT_THREADS = {
@@ -211,7 +211,8 @@ const CLIENT_THREADS = {
     { side: 'out', text: 'Hello Sophia! I saw your profile and since my wedding is coming up I was hoping to get styled by you for it!' },
     { side: 'in',  text: 'HI! Yes that sounds great as I am currently available. What look are you going for?' },
     { side: 'out', text: 'Perfect! I was hoping for a princess look with a long train and preferably white.' },
-    { side: 'in',  text: 'I definitely have some ideas that we can discuss. What would be your budget so I can show you some ideas?' },
+    { side: 'in',  text: 'I definitely have some ideas that we can discuss. Here is a special offer for the full styling session:' },
+    { side: 'in',  type: 'offer', price: '$60.00', was: '$68', expires: '299hr 47min' },
   ],
   'Mandy': [
     { side: 'in', text: 'Hi! I saw you love cottage core — what occasion are we dressing for?' },
@@ -257,9 +258,11 @@ const MessagesListScreen = ({ go, set }) => {
         {names.map(n => {
           const s = CLIENT_STYLISTS[n];
           return (
-            <button key={n} onClick={() => { set && set({ chatWith: n }); go('chat'); }} style={{ background: 'transparent', border: 0, borderBottom: '1px solid #ECE7E0', padding: '16px 24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', textAlign: 'left' }}>
-              <div>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14.5, color: '#1A1410' }}>{n} — <span style={{ color: '#6B5BD3', fontWeight: 500 }}>{s.spec}</span></div>
+            <button key={n} onClick={() => { set && set({ chatWith: n }); go('chat'); }} style={{ background: 'transparent', border: 0, borderBottom: '1px solid #ECE7E0', padding: '14px 24px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
+              <Avatar src={s.img} size={44}/>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14.5, color: '#1A1410' }}>{s.full}</div>
+                <div style={{ fontSize: 12, color: '#6B5BD3', marginTop: 1 }}>{s.spec}</div>
               </div>
               {s.new > 0 && <span style={{ fontSize: 10.5, background: '#6B5BD3', color: '#fff', fontWeight: 700, padding: '2px 7px', borderRadius: 999 }}>{s.new}</span>}
             </button>
@@ -537,7 +540,7 @@ const ChatScreen = ({ go, state }) => {
         <button onClick={() => go('messages-list')} style={{ background: 'transparent', border: 0, cursor: 'pointer', padding: 4 }}>
           <Icon name="back" size={22} stroke="#1A1410" strokeWidth={1.8}/>
         </button>
-        <Avatar initials={info.initials} size={36}/>
+        <Avatar src={info.img} initials={info.initials} size={36}/>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 15, color: '#1A1410' }}>{info.full}</div>
           <div style={{ fontSize: 11, color: '#6B5BD3' }}>● Available now</div>
@@ -548,7 +551,11 @@ const ChatScreen = ({ go, state }) => {
       <div ref={scrollRef} style={{ flex: 1, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', paddingBottom: 100 }}>
         <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', marginBottom: 6 }}>Today · 10:42 AM</div>
         {msgs.map((m, i) => (
-          <ChatBubbleClient key={i} side={m.side}>{m.text}</ChatBubbleClient>
+          m.type === 'offer'
+            ? <OfferCard key={i} side={m.side} price={m.price} was={m.was} expires={m.expires} status={m.status}
+                onCounter={() => setMsgs(cur => [...cur, { side: 'out', text: `Could you do ${m.was}? Counter sent.` }])}
+                onBuy={() => go('complete')}/>
+            : <ChatBubbleClient key={i} side={m.side}>{m.text}</ChatBubbleClient>
         ))}
       </div>
 
@@ -795,18 +802,38 @@ const AccountScreen = ({ go }) => {
   );
 };
 
-// ---------- 9b. IPA QUIZ ("Tell us how we did" toast → Finalise account → Quiz) ----------
+// ---------- 9b. IPA QUIZ ("Tell us how we did" → importance → performance) ----------
+const IPA_FEATURES = {
+  client: ['Sign-up process', 'Mood board', 'Style quiz', 'Stylist matching filter', 'Chatbot', 'Review', 'SOURCED Collective'],
+  stylist: ['Sign-up process', 'Mood board/personal style', 'Date matching filter', 'Task/style matching filter', 'Client matching filter', 'Finance tracker', 'Client payment process'],
+};
+
 const IPAQuizScreen = ({ go, state }) => {
-  const [step, setStep] = React.useState('toast'); // toast, intro, q1, q2, q3, done
-  const [ratings, setRatings] = React.useState({ onboarding: 4, matching: 5, chatbot: 3 });
-  const setR = (k, v) => setRatings({ ...ratings, [k]: v });
   const isStylist = !!(state && state.role === 'stylist');
+  const accent = isStylist ? '#6B5BD3' : '#EE5A5A';
+  const features = IPA_FEATURES[isStylist ? 'stylist' : 'client'];
   const backRoute = isStylist ? 'stylist-account' : 'account';
+
+  const [step, setStep] = React.useState('toast'); // toast, intro, importance, performance, done
+  const [important, setImportant] = React.useState([]);
+  const [ratings, setRatings] = React.useState({});
+
+  const toggleImportant = (f) => {
+    setImportant(prev => prev.includes(f) ? prev.filter(x => x !== f) : (prev.length >= 3 ? prev : [...prev, f]));
+  };
+  const setRating = (f, v) => setRatings(prev => ({ ...prev, [f]: v }));
+
+  const Heart = ({ filled, onClick, size = 28 }) => (
+    <button onClick={onClick} style={{ background: 'transparent', border: 0, cursor: 'pointer', padding: 2 }}>
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? accent : 'none'} stroke={accent} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
+  );
 
   if (step === 'toast') {
     return (
       <div style={{ background: 'rgba(74,65,59,0.4)', backdropFilter: 'blur(4px)', minHeight: '100%', position: 'relative' }}>
-        {/* Faded account view behind */}
         <div style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }}>
           {isStylist
             ? (typeof StylistAccountScreen !== 'undefined' ? <StylistAccountScreen go={() => {}}/> : null)
@@ -823,67 +850,104 @@ const IPAQuizScreen = ({ go, state }) => {
       </div>
     );
   }
+
   if (step === 'intro') {
     return (
       <div style={{ background: '#fff', minHeight: '100%', padding: '24px 24px 130px', display: 'flex', flexDirection: 'column' }}>
         <ScreenHeader onBack={() => setStep('toast')}/>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: 40, gap: 16 }}>
           <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 36, color: '#1A1410', letterSpacing: '-0.01em', lineHeight: 1.05 }}>Finalise your account</h1>
-          <p style={{ fontSize: 14, color: '#4A413B', lineHeight: 1.6, maxWidth: 290 }}>Help us improve your SOURCED experience. This quick survey takes less than 1 minute and helps us better understand you as a customer!</p>
+          <p style={{ fontSize: 14, color: '#4A413B', lineHeight: 1.6, maxWidth: 290 }}>Help us improve your SOURCED experience. This quick survey takes less than 1 minute and helps us better understand you as a {isStylist ? 'stylist' : 'customer'}!</p>
         </div>
-        <Button variant="primary" size="lg" fullWidth onClick={() => setStep('q1')}>Take a quiz</Button>
-        <p style={{ fontSize: 11, color: '#8C8278', textAlign: 'center', marginTop: 18, lineHeight: 1.5 }}>This quiz is 100% confidential.<br/>We do not collect any personal data.<br/><br/>After completion of this survey, you will be eligible to receive a voucher for <strong style={{ color: '#6B5BD3' }}>+30 points</strong> on your SOURCED Collective account!</p>
+        <Button variant={isStylist ? 'lilac' : 'primary'} size="lg" fullWidth onClick={() => setStep('importance')}>Take a quiz</Button>
+        <p style={{ fontSize: 11, color: '#8C8278', textAlign: 'center', marginTop: 18, lineHeight: 1.5 }}>This quiz is 100% confidential.<br/>We do not collect any personal data.<br/><br/>After completion of this survey, you will be eligible to receive a voucher for <strong style={{ color: accent }}>+30 points</strong> on your SOURCED Collective account!</p>
       </div>
     );
   }
-  if (step === 'done') {
+
+  // STEP 1 — Importance: "What matters to you the most?"
+  if (step === 'importance') {
     return (
-      <div style={{ background: '#fff', minHeight: '100%', padding: '40px 24px 130px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 18 }}>
-        <div style={{ marginTop: 60, width: 84, height: 84, borderRadius: '50%', background: '#EE5A5A', display: 'grid', placeItems: 'center' }}>
-          <Icon name="check" size={40} stroke="#fff" strokeWidth={3}/>
+      <div style={{ background: '#fff', minHeight: '100%', padding: '24px 24px 130px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <ScreenHeader onBack={() => setStep('intro')} title="Quiz" eyebrow/>
+        <div>
+          <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 28, color: '#1A1410', letterSpacing: '-0.01em', lineHeight: 1.1 }}>What matters to you the most?</h1>
+          <p style={{ fontSize: 13.5, color: '#8C8278', marginTop: 8 }}>Please choose up to 3 features. <span style={{ color: accent, fontWeight: 600 }}>{important.length}/3</span></p>
         </div>
-        <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 32, color: '#1A1410', letterSpacing: '-0.01em' }}>Thank you!</h1>
-        <p style={{ fontSize: 14, color: '#8C8278', maxWidth: 280, lineHeight: 1.5 }}>Your responses help us tailor SOURCED to you. You've earned <strong style={{ color: '#6B5BD3' }}>+30 points</strong>.</p>
-        <Button variant="primary" size="lg" fullWidth onClick={() => go('loyalty')} style={{ marginTop: 'auto' }}>View my rewards</Button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {features.map(f => {
+            const on = important.includes(f);
+            const disabled = !on && important.length >= 3;
+            return (
+              <button key={f} onClick={() => toggleImportant(f)} disabled={disabled}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                  padding: '14px 16px', borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
+                  border: '1.5px solid ' + (on ? accent : '#DCD5CB'),
+                  background: on ? (isStylist ? '#E6DFFF' : '#FFE0D8') : '#fff',
+                  opacity: disabled ? 0.45 : 1, textAlign: 'left',
+                  fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: on ? 600 : 500,
+                  color: on ? (isStylist ? '#3F3294' : '#B22C2C') : '#1A1410',
+                }}>
+                {f}
+                <span style={{ width: 20, height: 20, borderRadius: '50%', border: '1.5px solid ' + (on ? accent : '#DCD5CB'), background: on ? accent : 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                  {on && <Icon name="check" size={12} stroke="#fff" strokeWidth={3}/>}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <Button variant={isStylist ? 'lilac' : 'primary'} size="lg" fullWidth disabled={important.length === 0}
+          onClick={() => setStep('performance')} style={{ marginTop: 'auto' }}>
+          Rate these features
+        </Button>
       </div>
     );
   }
 
-  // q1, q2, q3 — IPA "rate 1-5 hearts"
-  const questions = {
-    q1: { num: 1, total: 3, label: 'Sign-up process', key: 'onboarding', sub: 'Was creating your account easy?' },
-    q2: { num: 2, total: 3, label: 'Stylist matching filter', key: 'matching', sub: 'How well did matches fit you?' },
-    q3: { num: 3, total: 3, label: 'Chatbot helpfulness', key: 'chatbot', sub: 'Was SOURCED Chat useful?' },
-  };
-  const q = questions[step];
-  const nextStep = step === 'q1' ? 'q2' : step === 'q2' ? 'q3' : 'done';
-  const prevStep = step === 'q1' ? 'intro' : step === 'q2' ? 'q1' : 'q2';
-
-  return (
-    <div style={{ background: '#fff', minHeight: '100%', padding: '24px 24px 130px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <ScreenHeader onBack={() => setStep(prevStep)}/>
-      <div>
-        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C8278', fontWeight: 600 }}>QUESTION {q.num} OF {q.total}</div>
-        <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
-          {[1,2,3].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 999, background: i <= q.num ? '#EE5A5A' : '#ECE7E0' }}/>)}
+  // STEP 2 — Performance: "How would you rate our performance?"
+  if (step === 'performance') {
+    return (
+      <div style={{ background: '#fff', minHeight: '100%', padding: '24px 24px 130px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <ScreenHeader onBack={() => setStep('importance')} title="Quiz" eyebrow/>
+        <div>
+          <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 28, color: '#1A1410', letterSpacing: '-0.01em', lineHeight: 1.1 }}>How would you rate our performance?</h1>
+          <p style={{ fontSize: 13.5, color: '#8C8278', marginTop: 8 }}>Please rate your chosen features from 1 to 5 hearts.</p>
         </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {important.map(f => (
+            <div key={f} style={{ background: '#FAF7F2', border: '1px solid #ECE7E0', borderRadius: 14, padding: '12px 16px' }}>
+              <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13.5, fontWeight: 600, color: '#1A1410', marginBottom: 8 }}>{f}</div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {[1,2,3,4,5].map(i => (
+                  <Heart key={i} filled={i <= (ratings[f] || 0)} onClick={() => setRating(f, i)} size={26}/>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <Button variant={isStylist ? 'lilac' : 'primary'} size="lg" fullWidth
+          onClick={() => setStep('done')} style={{ marginTop: 'auto' }}>
+          Finish the quiz
+        </Button>
       </div>
-      <div>
-        <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 30, color: '#1A1410', letterSpacing: '-0.01em', lineHeight: 1.1 }}>How would you rate the {q.label.toLowerCase()}?</h1>
-        <p style={{ fontSize: 14, color: '#8C8278', marginTop: 8 }}>{q.sub}</p>
+    );
+  }
+
+  // DONE — Congratulations
+  return (
+    <div style={{ background: '#fff', minHeight: '100%', padding: '40px 24px 130px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 18 }}>
+      <div style={{ marginTop: 50, width: 84, height: 84, borderRadius: '50%', background: accent, display: 'grid', placeItems: 'center' }}>
+        <Icon name="trophy" size={40} stroke="#fff" strokeWidth={2}/>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12 }}>
-        {[1,2,3,4,5].map(i => (
-          <button key={i} onClick={() => setR(q.key, i)} style={{ background: 'transparent', border: 0, cursor: 'pointer', padding: 4 }}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill={i <= ratings[q.key] ? '#EE5A5A' : 'none'} stroke="#EE5A5A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        ))}
+      <h1 style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 30, color: '#1A1410', letterSpacing: '-0.01em' }}>Thank you!</h1>
+      <p style={{ fontSize: 14, color: '#4A413B', maxWidth: 280, lineHeight: 1.5 }}>Your input helps a lot and we will continue improving for you!</p>
+      <div style={{ background: isStylist ? '#F4F1FF' : '#FFF1EE', border: '1px solid ' + (isStylist ? '#CDC0FF' : '#FFC4B5'), borderRadius: 16, padding: '16px 20px', width: '100%' }}>
+        <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 18, color: accent }}>Congratulations!</div>
+        <p style={{ fontSize: 13, color: '#4A413B', marginTop: 4 }}>You have received <strong style={{ color: accent }}>+30 points</strong> on your SOURCED Collective account!</p>
       </div>
-      <p style={{ fontSize: 12, color: '#8C8278', textAlign: 'center' }}>Tap a heart to rate</p>
-      <Button variant="primary" size="lg" fullWidth onClick={() => setStep(nextStep)} style={{ marginTop: 'auto' }}>
-        {step === 'q3' ? 'Submit' : 'Continue'}
+      <Button variant={isStylist ? 'lilac' : 'primary'} size="lg" fullWidth onClick={() => go(isStylist ? 'stylist-account' : 'loyalty')} style={{ marginTop: 'auto' }}>
+        {isStylist ? 'Back to account' : 'View my rewards'}
       </Button>
     </div>
   );

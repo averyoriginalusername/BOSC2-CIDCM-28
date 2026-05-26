@@ -560,6 +560,11 @@ const MessagesScreen = () => {
   React.useEffect(() => { setMsgs((DESK_THREADS[selected] || []).slice()); setDraft(''); }, [selected]);
   React.useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [msgs]);
 
+  const [showOffer, setShowOffer] = React.useState(false);
+  const [offerPrice, setOfferPrice] = React.useState('');
+  const [offerWas, setOfferWas] = React.useState('');
+  React.useEffect(() => { setShowOffer(false); setOfferPrice(''); setOfferWas(''); }, [selected]);
+
   const send = () => {
     const text = draft.trim();
     if (!text) return;
@@ -567,6 +572,16 @@ const MessagesScreen = () => {
     setDraft('');
     const reply = DESK_REPLIES[selected];
     if (reply) setTimeout(() => setMsgs(m => [...m, { side: 'in', text: reply }]), 700);
+  };
+
+  const sendOffer = () => {
+    const p = offerPrice.trim();
+    if (!p) return;
+    const price = p.startsWith('$') ? p : '$' + p;
+    const was = offerWas.trim() ? (offerWas.trim().startsWith('$') ? offerWas.trim() : '$' + offerWas.trim()) : '';
+    setMsgs(m => [...m, { side: 'out', type: 'offer', price, was, expires: '299hr 47min' }]);
+    setShowOffer(false); setOfferPrice(''); setOfferWas('');
+    setTimeout(() => setMsgs(m => [...m, { side: 'in', text: 'Thanks! Reviewing your offer now.' }]), 800);
   };
 
   const threads = threadMeta.map(t => ({ ...t, last: (DESK_THREADS[t.name][DESK_THREADS[t.name].length - 1] || {}).text || '', sel: t.name === selected }));
@@ -623,15 +638,32 @@ const MessagesScreen = () => {
             <div style={{ fontSize: 11, color: '#6B5BD3' }}>● Active now</div>
           </div>
           <Button variant="outline" size="sm">View profile</Button>
+          <Button variant="outline" size="sm" leftIcon="tag" onClick={() => setShowOffer(s => !s)}>Offer</Button>
           <Button variant="primary" size="sm" leftIcon="fileText">Send contract</Button>
         </div>
 
         <div ref={scrollRef} style={{ flex: 1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto' }}>
           <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', margin: '8px 0' }}>TUESDAY · 10:42 AM</div>
           {msgs.map((m, i) => (
-            <ShopperBubble key={i} side={m.side}>{m.text}</ShopperBubble>
+            m.type === 'offer'
+              ? <DeskOfferCard key={i} side={m.side} price={m.price} was={m.was} expires={m.expires} status={m.status}/>
+              : <ShopperBubble key={i} side={m.side}>{m.text}</ShopperBubble>
           ))}
         </div>
+
+        {showOffer && (
+          <div style={{ margin: '0 22px', padding: 14, background: '#F4F1FF', border: '1px solid #CDC0FF', borderRadius: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1410' }}>Send a price offer to {selected.split(' ')[0]}</span>
+              <button onClick={() => setShowOffer(false)} style={{ background: 'transparent', border: 0, cursor: 'pointer', color: '#8C8278', fontSize: 16 }}>×</button>
+            </div>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
+              <Input label="Offer price" placeholder="$60" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} style={{ flex: 1 }}/>
+              <Input label="Original (optional)" placeholder="$68" value={offerWas} onChange={(e) => setOfferWas(e.target.value)} style={{ flex: 1 }}/>
+              <Button variant="primary" size="md" onClick={sendOffer}>Send offer</Button>
+            </div>
+          </div>
+        )}
 
         <div style={{ padding: '14px 22px', borderTop: '1px solid #ECE7E0', background: '#fff', display: 'flex', alignItems: 'center', gap: 10 }}>
           <Icon name="paperclip" size={18} stroke="#8C8278"/>
@@ -659,6 +691,24 @@ const ShopperBubble = ({ side, children }) => {
       borderBottomRightRadius: out ? 6 : 16,
       borderBottomLeftRadius: out ? 16 : 6,
     }}>{children}</div>
+  );
+};
+
+// Depop-style price offer card for the desktop chat
+const DeskOfferCard = ({ side, price, was, expires = '299hr 47min', status }) => {
+  const received = side === 'in';
+  return (
+    <div style={{ alignSelf: received ? 'flex-start' : 'flex-end', maxWidth: '62%', background: '#fff', border: '1px solid #ECE7E0', borderRadius: 14, padding: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+        <Icon name="tag" size={15} stroke="#4B8B5A"/>
+        <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 12.5, color: '#4B8B5A' }}>{received ? 'Special offer received' : 'Offer sent'}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+        <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 20, color: '#1A1410' }}>{price}</span>
+        {was && <span style={{ fontSize: 13, color: '#8C8278', textDecoration: 'line-through' }}>{was}</span>}
+      </div>
+      <div style={{ fontSize: 11.5, color: '#8C8278', marginTop: 4 }}>{status || `Expires in ${expires}`}</div>
+    </div>
   );
 };
 

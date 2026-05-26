@@ -445,11 +445,14 @@ const StylistChatScreen = ({ go, state }) => {
   const info = STYLIST_CLIENTS[who];
   const [msgs, setMsgs] = React.useState(() => (STYLIST_THREADS[who] || []).slice());
   const [draft, setDraft] = React.useState('');
+  const [showOffer, setShowOffer] = React.useState(false);
+  const [offerPrice, setOfferPrice] = React.useState('');
+  const [offerWas, setOfferWas] = React.useState('');
   const scrollRef = React.useRef(null);
 
   React.useEffect(() => {
     setMsgs((STYLIST_THREADS[who] || []).slice());
-    setDraft('');
+    setDraft(''); setShowOffer(false); setOfferPrice(''); setOfferWas('');
   }, [who]);
 
   React.useEffect(() => {
@@ -463,6 +466,16 @@ const StylistChatScreen = ({ go, state }) => {
     setDraft('');
     const reply = STYLIST_REPLIES[who];
     if (reply) setTimeout(() => setMsgs(m => [...m, { side: 'in', text: reply }]), 700);
+  };
+
+  const sendOffer = () => {
+    const p = offerPrice.trim();
+    if (!p) return;
+    const price = p.startsWith('$') ? p : '$' + p;
+    const was = offerWas.trim() ? (offerWas.trim().startsWith('$') ? offerWas.trim() : '$' + offerWas.trim()) : '';
+    setMsgs(m => [...m, { side: 'out', type: 'offer', price, was, expires: '299hr 47min' }]);
+    setShowOffer(false); setOfferPrice(''); setOfferWas('');
+    setTimeout(() => setMsgs(m => [...m, { side: 'in', text: 'Thanks! Reviewing your offer now.' }]), 800);
   };
 
   return (
@@ -484,12 +497,37 @@ const StylistChatScreen = ({ go, state }) => {
       <div ref={scrollRef} style={{ flex: 1, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', paddingBottom: 100 }}>
         <div style={{ textAlign: 'center', fontSize: 11, color: '#8C8278', letterSpacing: '0.06em', marginBottom: 6 }}>TODAY · 10:42 AM</div>
         {msgs.map((m, i) => (
-          <ChatBubbleStylist key={i} side={m.side}>{m.text}</ChatBubbleStylist>
+          m.type === 'offer'
+            ? <OfferCard key={i} side={m.side} price={m.price} was={m.was} expires={m.expires} status={m.status}/>
+            : <ChatBubbleStylist key={i} side={m.side}>{m.text}</ChatBubbleStylist>
         ))}
       </div>
 
-      <div style={{ position: 'absolute', bottom: 30, left: 16, right: 16, background: '#fff', border: '1px solid #ECE7E0', borderRadius: 999, padding: '8px 8px 8px 18px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 8px 20px rgba(26,20,16,0.06)' }}>
-        <Icon name="image" size={20} stroke="#8C8278"/>
+      {/* Offer composer */}
+      {showOffer && (
+        <div style={{ position: 'absolute', bottom: 84, left: 16, right: 16, background: '#fff', border: '1px solid #CDC0FF', borderRadius: 16, padding: 14, boxShadow: '0 12px 30px rgba(26,20,16,0.12)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 13.5, color: '#1A1410' }}>Send a price offer</span>
+            <button onClick={() => setShowOffer(false)} style={{ background: 'transparent', border: 0, cursor: 'pointer' }}><Icon name="close" size={16} stroke="#8C8278"/></button>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 10.5, color: '#8C8278', fontWeight: 600, marginBottom: 4, letterSpacing: '0.04em' }}>OFFER PRICE</div>
+              <input value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} placeholder="$60" style={{ width: '100%', boxSizing: 'border-box', border: '1.25px solid #DCD5CB', borderRadius: 10, padding: '10px 12px', fontFamily: "'Outfit',sans-serif", fontSize: 14, outline: 'none' }}/>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 10.5, color: '#8C8278', fontWeight: 600, marginBottom: 4, letterSpacing: '0.04em' }}>ORIGINAL (OPTIONAL)</div>
+              <input value={offerWas} onChange={(e) => setOfferWas(e.target.value)} placeholder="$68" style={{ width: '100%', boxSizing: 'border-box', border: '1.25px solid #DCD5CB', borderRadius: 10, padding: '10px 12px', fontFamily: "'Outfit',sans-serif", fontSize: 14, outline: 'none' }}/>
+            </div>
+          </div>
+          <button onClick={sendOffer} style={{ width: '100%', marginTop: 10, padding: '11px 0', borderRadius: 999, border: 0, background: '#6B5BD3', color: '#fff', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14 }}>Send offer</button>
+        </div>
+      )}
+
+      <div style={{ position: 'absolute', bottom: 30, left: 16, right: 16, background: '#fff', border: '1px solid #ECE7E0', borderRadius: 999, padding: '8px 8px 8px 14px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 8px 20px rgba(26,20,16,0.06)' }}>
+        <button onClick={() => setShowOffer(s => !s)} title="Send a price offer" style={{ background: showOffer ? '#6B5BD3' : '#F4F1FF', border: 0, width: 34, height: 34, borderRadius: '50%', cursor: 'pointer', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+          <Icon name="tag" size={17} stroke={showOffer ? '#fff' : '#6B5BD3'} strokeWidth={1.8}/>
+        </button>
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
