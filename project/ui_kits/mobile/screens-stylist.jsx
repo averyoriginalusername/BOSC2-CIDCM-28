@@ -669,7 +669,7 @@ const StylistAccountScreen = ({ go }) => {
     { l: 'My clients',           icon: 'users',  go: 'clients' },
     { l: 'Saved shops',          icon: 'heart' },
     { l: 'My style portfolio',   icon: 'image' },
-    { l: 'SOURCED Collective',   icon: 'crown',  accent: true, go: 'loyalty' },
+    { l: 'SOURCED Collective',   icon: 'crown',  accent: true, go: 'stylist-loyalty' },
     { l: 'Finance tracker',      icon: 'wallet', go: 'payments' },
     { l: 'Tell us how we did',   icon: 'message', accent: true, go: 'stylist-ipa-quiz' },
   ];
@@ -747,8 +747,128 @@ const StylistAccountScreen = ({ go }) => {
 };
 
 
+// ---------- SOURCED COLLECTIVE (stylist) — matches the providers loyalty doc ----------
+const StylistLoyaltyScreen = ({ go }) => {
+  const earn = [
+    { l: 'Complete stylist profile', v: '+50' },
+    { l: 'Upload portfolio looks', v: '+50' },
+    { l: 'Complete a booking', v: '+100' },
+    { l: 'Respond within two hours', v: '+30' },
+    { l: 'Invite another stylist', v: '+500' },
+  ];
+  const rewards = [
+    { l: '24-hour profile boost', v: '500', i: 'sparkle' },
+    { l: 'Priority access to new client requests for a month', v: '5,000', i: 'star' },
+    { l: 'Recommended Stylist icon', v: '5,000', i: 'crown' },
+  ];
+  const tiers = [
+    {
+      name: 'Insider Stylist', rom: 'i', bg: '#FAF7F2', fg: '#1A1410', border: '#DCD5CB',
+      req: 'Has an account · at least 3 sessions in a month',
+      perks: ['5% discount on point rewards', 'Access to Sourced “stylist community”'],
+    },
+    {
+      name: 'Icon Stylist', rom: 'ii', bg: '#E6DFFF', fg: '#3F3294', border: '#CDC0FF', current: true,
+      req: 'Has an account · at least 10 sessions in a month',
+      perks: ['15% discount on point rewards', 'Access to Sourced “stylist community”', 'One free 24-hour profile boost a month'],
+    },
+    {
+      name: 'Editorial Stylist', rom: 'iii', bg: '#1A1410', fg: '#E8D9B6', border: '#1A1410',
+      req: 'Has an account · 10 sessions in a month with at least 5 five-star reviews',
+      perks: ['20% discount on point rewards', 'Access to Sourced “stylist community”', 'Two free 24-hour profile boosts a month', '“Recommended stylist” icon'],
+    },
+  ];
+  return (
+    <div style={{ background: '#FAF7F2', minHeight: '100%', paddingBottom: 130 }}>
+      <ScreenHeader onBack={() => go('stylist-account')} title="" role="stylist"/>
+      <div style={{ padding: '0 24px 18px', textAlign: 'center' }}>
+        <p style={{ fontSize: 10.5, color: '#8C8278', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600 }}>SOURCED COLLECTIVE</p>
+        <h1 style={{ fontFamily: "'Instrument Serif',serif", fontWeight: 400, fontStyle: 'italic', fontSize: 30, color: '#1A1410', letterSpacing: '-0.01em', marginTop: 4 }}>Stylist rewards</h1>
+      </div>
+
+      <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Points card */}
+        <div style={{ background: '#6B5BD3', color: '#fff', borderRadius: 22, padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <span style={{ fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.85, fontWeight: 600 }}>POINTS AVAILABLE</span>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 500, fontSize: 44, marginTop: 4 }}>730</div>
+            </div>
+            <Icon name="trophy" size={36} stroke="#fff" strokeWidth={1.4}/>
+          </div>
+          <div style={{ marginTop: 14 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>Icon Stylist</span>
+              <span style={{ fontSize: 11, opacity: 0.85 }}>5 five-star reviews to Editorial</span>
+            </div>
+            <div style={{ height: 6, background: 'rgba(255,255,255,0.25)', borderRadius: 999 }}>
+              <div style={{ width: '62%', height: '100%', background: '#fff', borderRadius: 999 }}/>
+            </div>
+          </div>
+        </div>
+
+        {/* POINT BASED SYSTEM */}
+        <div>
+          <p style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410', marginBottom: 8 }}>Point-based system</p>
+          <div style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 18 }}>
+            {earn.map((e, i) => (
+              <div key={e.l} style={{ padding: '13px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: i < earn.length - 1 ? '1px solid #ECE7E0' : 'none' }}>
+                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13.5, color: '#1A1410' }}>{e.l}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 14, color: '#6B5BD3', fontWeight: 600 }}>{e.v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* POINT REWARDS */}
+        <div>
+          <p style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410', marginBottom: 8 }}>Point rewards</p>
+          <div style={{ background: '#fff', border: '1px solid #ECE7E0', borderRadius: 18 }}>
+            {rewards.map((r, i) => (
+              <div key={r.l} style={{ padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center', borderBottom: i < rewards.length - 1 ? '1px solid #ECE7E0' : 'none' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F4F1FF', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                  <Icon name={r.i} size={18} stroke="#6B5BD3" strokeWidth={1.8}/>
+                </div>
+                <span style={{ flex: 1, fontFamily: "'Outfit',sans-serif", fontSize: 13.5, color: '#1A1410', lineHeight: 1.35 }}>{r.l}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, color: '#6B5BD3', fontWeight: 600, whiteSpace: 'nowrap' }}>{r.v} pts</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* TIERS */}
+        <div>
+          <p style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1410', marginBottom: 8 }}>Membership tiers</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {tiers.map(t => (
+              <div key={t.name} style={{ background: t.bg, color: t.fg, borderRadius: 16, padding: 18, border: t.current ? '2px solid #6B5BD3' : '1px solid ' + t.border, position: 'relative' }}>
+                {t.current && <span style={{ position: 'absolute', top: -10, right: 16, background: '#6B5BD3', color: '#fff', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', padding: '4px 10px', borderRadius: 999 }}>YOUR TIER</span>}
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <div style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 26, lineHeight: 1, color: t.fg }}>{t.name}</div>
+                  <span style={{ fontFamily: "'Instrument Serif',serif", fontStyle: 'italic', opacity: 0.6, fontSize: 18 }}>{t.rom}</span>
+                </div>
+                <div style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.75, fontWeight: 600, marginBottom: 6 }}>REQUIREMENTS</div>
+                <div style={{ fontSize: 13, opacity: 0.92, marginBottom: 12, lineHeight: 1.4 }}>{t.req}</div>
+                <div style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.75, fontWeight: 600, marginBottom: 8 }}>PERKS</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {t.perks.map(p => (
+                    <div key={p} style={{ display: 'flex', gap: 8, fontSize: 13, opacity: 0.92, lineHeight: 1.35 }}>
+                      <Icon name="check" size={14} stroke={t.fg} strokeWidth={2}/>
+                      <span>{p}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 Object.assign(window, {
   StylistSetupScreen, StylistHomeScreen, CalendarScreen,
   ClientsScreen, ClientDetailScreen, StylistMessagesListScreen, StylistChatScreen,
-  PaymentsScreen, StylistAccountScreen,
+  PaymentsScreen, StylistAccountScreen, StylistLoyaltyScreen,
 });

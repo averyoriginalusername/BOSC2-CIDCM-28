@@ -97,6 +97,7 @@ const SCREENS = [
   { id: 'client-detail',         label: 'Client detail',     Comp: ClientDetailScreen,         showNav: false, role: 'stylist' },
   { id: 'payments',              label: 'Payments',          Comp: PaymentsScreen,             showNav: false, role: 'stylist' },
   { id: 'stylist-account',       label: 'Stylist · Account', Comp: StylistAccountScreen,       showNav: true,  role: 'stylist', activeNav: 'user' },
+  { id: 'stylist-loyalty',       label: 'Stylist · Collective', Comp: StylistLoyaltyScreen,    showNav: true,  role: 'stylist', activeNav: 'user' },
 ];
 
 // Tab key → screen id, per role
@@ -222,7 +223,7 @@ function App() {
           <aside className="flow-side">
             <h4>Stylist flow</h4>
             <ul>
-              {['stylist-setup','stylist-home','calendar','clients','client-detail','stylist-messages-list','stylist-chat','payments','stylist-account','stylist-ipa-quiz'].map(id => {
+              {['stylist-setup','stylist-home','calendar','clients','client-detail','stylist-messages-list','stylist-chat','payments','stylist-account','stylist-loyalty','stylist-ipa-quiz'].map(id => {
                 const s = SCREENS.find(x => x.id === id);
                 return (
                   <li key={id} className={state.screen === id ? 'active' : ''} onClick={() => setState(st => ({...st, screen: id, role: 'stylist' }))}>{s.label}</li>
