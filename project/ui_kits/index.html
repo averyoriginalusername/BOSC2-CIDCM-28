@@ -110,6 +110,22 @@
   .subscribe input { flex: 1; min-width: 200px; padding: 14px 18px; border: 1px solid #DCD5CB; border-radius: 999px; background: #fff; font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; color: #1A1410; }
   .subscribe input:focus { border-color: #1A1410; }
 
+  /* BUILT WITH */
+  .built { margin: 80px 40px 0; padding: 56px 40px; border-radius: 28px; background: linear-gradient(135deg, #F4F1FF 0%, #FAF7F2 60%); border: 1px solid #E6DFFF; display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .built .eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #6B5BD3; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+  .built h2 { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 40px; line-height: 1.05; letter-spacing: -0.015em; margin: 10px 0 14px; color: #1A1410; }
+  .built p { color: #4A413B; font-size: 14.5px; line-height: 1.6; margin: 0 0 22px; max-width: 460px; }
+  .built .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .built .lk { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 999px; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14px; text-decoration: none; transition: transform 120ms; }
+  .built .lk:hover { transform: translateY(-2px); }
+  .built .lk-primary { background: #1A1410; color: #fff; }
+  .built .lk-outline { background: #fff; color: #1A1410; box-shadow: inset 0 0 0 1.5px #1A1410; }
+  .built-art { display: flex; flex-direction: column; gap: 12px; }
+  .built-art .row { display: flex; gap: 12px; align-items: center; padding: 14px 16px; background: #fff; border: 1px solid #ECE7E0; border-radius: 14px; }
+  .built-art .row .dot { width: 32px; height: 32px; border-radius: 10px; background: #F4F1FF; display: grid; place-items: center; flex-shrink: 0; }
+  .built-art .row .text { font-size: 13px; color: #4A413B; line-height: 1.45; }
+  .built-art .row .text strong { color: #1A1410; }
+
   /* FOOTER */
   footer { padding: 40px 40px 60px; border-top: 1px solid #ECE7E0; margin-top: 60px; }
   footer .row { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: #8C8278; font-size: 13px; }
@@ -118,7 +134,7 @@
   footer .meta { text-align: center; margin-top: 20px; color: #C7BFB5; font-size: 12px; }
 
   @media (max-width: 900px) {
-    .hero, .doors-grid, .download { grid-template-columns: 1fr; }
+    .hero, .doors-grid, .download, .built { grid-template-columns: 1fr; }
     .hero-art { height: 400px; }
     .how-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
     nav .links { display: none; }
@@ -325,6 +341,42 @@
       <input placeholder="Full name" required>
       <button type="submit" class="btn btn-ink">Subscribe</button>
     </form>
+  </section>
+
+  <!-- BUILT WITH CLAUDE -->
+  <section class="built" id="built">
+    <div>
+      <span class="eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B5BD3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L13.5 9 L20 10.5 L13.5 12 L12 18 L10.5 12 L4 10.5 L10.5 9 Z"/></svg>
+        How this was built
+      </span>
+      <h2>Designed and coded with <em>Claude</em>.</h2>
+      <p>This whole prototype — the marketing site, the unified mobile app for both client and stylist, and the stylist desktop workspace — was built from the wireframes via Claude Design and a Claude Code session. Open either to see exactly how the project came together.</p>
+      <div class="links">
+        <a class="lk lk-primary" href="https://claude.ai/code/session_01FXTJGWkdpjMdRncYuDretB" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          View the build conversation
+        </a>
+        <a class="lk lk-outline" href="https://claude.ai/design/p/019e170f-085d-7655-aba4-401d8979a2d2?via=share" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="m18 2 4 4-11 11H7v-4z"/></svg>
+          View source design project
+        </a>
+      </div>
+    </div>
+    <div class="built-art">
+      <div class="row">
+        <div class="dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B5BD3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="text"><strong>Step 1 — Design.</strong> Wireframes turned into HTML/CSS/JSX prototypes via Claude Design.</div>
+      </div>
+      <div class="row">
+        <div class="dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B5BD3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="text"><strong>Step 2 — Code.</strong> Iterated in a Claude Code session — flows, components, interactions and copy.</div>
+      </div>
+      <div class="row">
+        <div class="dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B5BD3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="text"><strong>Step 3 — Ship.</strong> Pushed to GitHub and served via GitHub Pages — this very site.</div>
+      </div>
+    </div>
   </section>
 
   <footer id="community">
